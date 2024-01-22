@@ -1,3 +1,8 @@
+*{
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 .custom-select {
     /* min-width: 350px; */
     position: relative;
@@ -46,4 +51,23 @@
     border-right: var(--size) solid transparent;
     border-top: var(--size) solid black;
     top: 55%;
+  }
+  .action-item{
+    position: relative;
+    cursor: pointer;
+  }
+  .action-item:hover span{
+    display: block;
+  }
+  .action-item span{
+    position: absolute;
+    display: none;
+    bottom: 0;
+    left: 50%;
+    background: rgba(0, 0, 0, 0.603);
+    transform: translate(-50%,110%);
+    /* transform: translateY(27px); */
+    color: white;
+    padding: 3px 10px;
+    border-radius: 5px;
   }

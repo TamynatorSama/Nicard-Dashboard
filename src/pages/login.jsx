@@ -1,12 +1,93 @@
 import LogoLarge from "../assets/logo_large.svg";
 import Logo from "../assets/logo.svg";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import {useNavigate} from "react-router-dom"
+  import 'react-toastify/dist/ReactToastify.css';
+
+  import { useContext } from "react";
+import { DataProvider } from "../App";
+  
+
 
 const Login = () => {
+  const navigate = useNavigate();
+  const appState = useContext(DataProvider)
 
   const [errors,setErrors] = useState({})
   const [isLoading,setIsLoading] = useState(false)
+  const notify = (message) => toast.success(`${message}`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Bounce,
+    });
+    const notifyError = (message) => toast.error(`${message}`, {
+      position: "top-right",
+      autoClose: 2000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+      transition: Bounce,
+      });
+
+    const handleSubmit=async(ev)=>{
+      if(isLoading) return;
+      ev.preventDefault()
+      setIsLoading(true)
+      
+      let email = ev.target[0].value
+      let password = ev.target[1].value
+      
+
+      let response = await fetch("http://localhost:5001/api/auth",{
+        method:"POST",
+        headers:{
+          "content-type":"application/json"
+        },
+        body:JSON.stringify({
+
+          "email":email,
+          "password":password
+        })
+      });
+
+      let decodedResponse = await response.json()
+      console.log(decodedResponse)
+      setIsLoading(false)
+      if(response.status !== 200){
+        notifyError(decodedResponse.message)
+        return;
+      }
+      else{
+        notify(decodedResponse.message)
+        
+        setTimeout(()=>{
+          navigate('/')
+          let token = decodedResponse.result.token
+          appState.appDataModifier({userData: {
+            "user_info":{...decodedResponse.result.user_payload,token},
+            "vendor_info":{...decodedResponse.result.vendor}
+          },
+            vendorData:[]})
+        },2500)
+      }
+
+
+
+
+
+    }
+
+
   // const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
 
@@ -51,10 +132,10 @@ const Login = () => {
     }
   return (
     <main className="h-screen w-full relative flex justify-center items-center flex-col">
-      <div className="absolute bottom-0 right-0 h-3/4 select-none">
+      <div className="absolute bottom-0 right-0 h-3/4 select-none pointer-events-none">
         <img src={LogoLarge} className="h-full" alt="" />
       </div>
-      <div className="flex justify-center items-center flex-col">
+      <div className="flex justify-center items-center flex-col z-10">
         <img src={Logo} className="h-full" alt="Nicard logo" />
         <h1 className="mb-5 text-3xl font-bold">Nicard</h1>
         <div className="login-box w-full max-w-[25em] p-10 border-2 border-stone-200 rounded-2xl shadow-md bg-white">
@@ -62,7 +143,7 @@ const Login = () => {
           <p className="text-stone-600 text-sm font-medium font-sans mt-1">
             Enter your credentials to access your dashboard
           </p>
-          <form className="mt-8" onChange={handleFormChange}>
+          <form className="mt-8" method="POST" onChange={handleFormChange} onSubmit={handleSubmit}>
             <div className="input-grp flex border-2 border-stone-300 p-2 rounded-md">
               <div className="border-r-2 pr-2">
                 <svg
@@ -117,11 +198,13 @@ const Login = () => {
               
             </div>
             <p className="text-red-500 font-font-medium text-sm">{(errors.password?.length??0)>0?`${errors.password[0]}`:""}</p>
-            <Link to="/"><button type="button" className="outline-white w-full grid place-content-center bg-green-500 text-white font-bold py-3 rounded-md mt-7">{isLoading?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="white" stroke-linecap="round" stroke-width="4"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg>:"Login"}</button></Link>
+            <button type="submit"  className="outline-white w-full grid place-content-center bg-[#2baf50] text-white font-bold py-3 rounded-md mt-7">{isLoading?<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="white" stroke-linecap="round" stroke-width="4"><path stroke-dasharray="60" stroke-dashoffset="60" stroke-opacity=".3" d="M12 3C16.9706 3 21 7.02944 21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3Z"><animate fill="freeze" attributeName="stroke-dashoffset" dur="1.3s" values="60;0"/></path><path stroke-dasharray="15" stroke-dashoffset="15" d="M12 3C16.9706 3 21 7.02944 21 12"><animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="15;0"/><animateTransform attributeName="transform" dur="1.5s" repeatCount="indefinite" type="rotate" values="0 12 12;360 12 12"/></path></g></svg>:"Login"}</button>
           </form>
         </div>
       </div>
+      <ToastContainer />
     </main>
+    
   );
 };
 
