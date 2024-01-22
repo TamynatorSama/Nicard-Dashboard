@@ -1,46 +1,35 @@
 
 // import CustomDropDown from "./customDropdown";
+import { useState } from "react";
 import Logo from "../assets/logo.svg";
 const NavComponent = () => {
-  return (
-    <nav className="flex px-20 items-center pt-10 gap-5 ">
-      <div className="logo-grp flex items-center gap-14 w-full">
-        <div className="flex items-center gap-5">
-        <img src={Logo} className="h-full" alt="Nicard logo" />
-          <div><h1 className="font-bold text-2xl text-nowrap">Unity Bank</h1>
-          <p className="text-stone-400 text-sm font-semibold">Lagos,Nigeria</p></div>
-        </div>
-        <div className="input-grp flex border-2 border-stone-200 p-2 rounded-lg w-full max-w-[30em]">
-          <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              className="stroke-stone-300"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.25"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-search"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-          </div>
+  let selectedStyle = 'text-2xl pt-4 pb-4 pl-6 pr-6 bg-green-500 rounded-md text-white mb-4 cursor-auto text-nowrap';
+  let unselectedStyle = 'text-2xl text-gray-500 block mb-4 cursor-auto';
 
-          <input
-            class="w-full outline-none ml-4 font-medium"
-            type="text"
-            name="search"
-            placeholder="Search by nin"
-          />
-        </div>
+  const [selected, setSelected] = useState(0);
+
+  function changeSelected(newIndex) {
+    setSelected(newIndex);
+  };
+
+  return (
+    <nav className="flex flex-col pl-8 pr-12 pt-10 gap-1 bg-green-bg h-screen w-1/4">
+      <div className="flex items-center gap-5">
+        <img src={Logo} className="h-full" alt="Nicard logo" />
+        <div><h1 className="font-bold text-2xl text-nowrap text-white">Unity Bank</h1>
+          <p className="text-stone-400 text-xs font-semibold">Vendor Id: 2882482484824</p></div>
       </div>
 
-      
-     {/* <CustomDropDown /> */}
+      <div className='ml-24 mt-8 flex flex-col gap-15'>
+        <h1 className={selected === 0 ? selectedStyle : unselectedStyle} onClick={() => changeSelected(0)}>Dashboard</h1>
+        <h1 className={selected === 1 ? selectedStyle : unselectedStyle} onClick={() => changeSelected(1)}>Renew Card</h1>
+        <h1 className={selected === 2 ? selectedStyle : unselectedStyle} onClick={() => changeSelected(2)}>Replace Card</h1>
+        <h1 className={selected === 3 ? selectedStyle : unselectedStyle} onClick={() => changeSelected(3)}>Block Card</h1>
+      </div>
+
+
+
+      {/* <CustomDropDown /> */}
     </nav>
   );
 };
