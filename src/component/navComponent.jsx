@@ -1,28 +1,51 @@
-// import CustomDropDown from "./customDropdown";
-// import { useState } from "react";
+
 import greenLogo from "../assets/green_logo.svg";
 import dashboardIcon from "../assets/dashboard.svg";
+
+import { FaSolidUsers, MaterialSymbolsAddCardOutlineRounded, MaterialSymbolsCreditCardGearOutline, MdiCreditCardRemoveOutline, MdiCreditCardSyncOutline } from "./icons";
+import { useDispatch, useSelector } from "react-redux";
+import { changePage } from "../app/navigator/navigatorSlice";
 const NavComponent = () => {
-  // let selectedStyle = 'text-2xl pt-4 pb-4 pl-6 pr-6 bg-green-500 rounded-md text-white mb-4 cursor-auto text-nowrap';
-  // let unselectedStyle = 'text-2xl text-gray-500 block mb-4 cursor-auto';
+  const currentNavIndex = useSelector((state)=>state.navigator.selectedPage)
+  const dispatch = useDispatch()
 
-  // const [selected, setSelected] = useState(0);
 
-  // function changeSelected(newIndex) {
-  //   setSelected(newIndex);
-  // };
+  function changeSelected(newIndex) {
+    dispatch(changePage(newIndex))
+  };
 
   return (
-    <div className="max-w-[25em] h-full bg-[#001a07] px-10 py-10">
+    <div className="w-1/4 h-full bg-[#001a07] px-10 py-10">
       <div className="flex items-center gap-4 justify-start">
         <img src={greenLogo} alt="Nicard Logo" className="w-[3em]" />
         <h1 className="text-[#208a3d] text-xl font-semibold">Nicard</h1>
       </div>
-      <div className="mt-10 ">
-        <div className="flex justify-center items-center gap-2 bg-[#2baf50] py-2 px-10 rounded-sm">
+      <div className="mt-10  flex flex-col gap-3">
+        <div onClick={()=> changeSelected(0)} className={`flex items-center gap-2 ${currentNavIndex===0?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%] rounded-md cursor-pointer`}>
           <img src={dashboardIcon} alt="Nicard Logo" className="w-[1.3em] h-[1.3em]" />
           <h2 className="text-white font-medium">Dashbaord</h2>
         </div>
+        <div onClick={()=> changeSelected(1)} className={`flex items-center gap-2 ${currentNavIndex ===1?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+          <MaterialSymbolsAddCardOutlineRounded />
+          <h2 className="text-white font-medium">Request</h2>
+        </div>
+        <div onClick={()=> changeSelected(2)} className={`flex items-center gap-2 ${currentNavIndex ===2?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+          <MdiCreditCardSyncOutline />
+          <h2 className="text-white font-medium">Renew</h2>
+        </div>
+        <div onClick={()=> changeSelected(3)} className={`flex items-center gap-2 ${currentNavIndex ===3?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+          <MaterialSymbolsCreditCardGearOutline />
+          <h2 className="text-white font-medium">Replace</h2>
+        </div>
+        <div onClick={()=> changeSelected(4)} className={`flex items-center gap-2 ${currentNavIndex ===4?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+          <MdiCreditCardRemoveOutline />
+          <h2 className="text-white font-medium">Block</h2>
+        </div>
+        <div onClick={()=> changeSelected(5)} className={`flex items-center gap-2 ${currentNavIndex ===5?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+          <FaSolidUsers />
+          <h2 className="text-white font-medium">Access Control</h2>
+        </div>
+        
       </div>
     </div>
   );

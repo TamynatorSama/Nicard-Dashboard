@@ -3,6 +3,7 @@ import Dashboard from './pages/dashboard';
 import {Routes,Route, Outlet, Navigate,useLocation } from 'react-router-dom';
 import Login from './pages/login';
 import { createContext,useContext,useState } from "react"
+import NewDashboard from './pages/dashboard/newDashboard';
 
 
 export const DataProvider = createContext({})
@@ -35,6 +36,7 @@ function App() {
     <DataProvider.Provider value={{appData,appDataModifier}}>
       <Routes>
         <Route path='/login' element={<Login/>}/>
+        <Route path='/dash' element={<NewDashboard />} />
         <Route element={<RouteAuthenticator/>}>
           <Route path='/' element={<Dashboard/>} />
         </Route>
