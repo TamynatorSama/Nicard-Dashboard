@@ -2,19 +2,24 @@
 import CardRequestListingCard from "./components/card_request_listing_card";
 import CustomDropDown from "../../component/customDropdown";
 import {
-  EpArrowLeft,
   FluentTag28Regular,
   IconamoonSearch,
   IonHome,
   MaterialSymbolsDiscoverTuneRounded,
-  UiwDate,
 } from "../../component/icons";
 import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { cardList } from "../../app/appSlice";
+import PaginationController from "./components/pagination_controller";
+import { changeListPerPage } from "../../app/card_listing/pagination";
 
 const CardListingPage = ()=>{
 
+    const paginatorData = useSelector(state=>state.listingPaginator)
+    const dispatch = useDispatch()
 
     const tableNav = useRef();
+    const bankCardListing = useSelector(cardList)
 
   const contactStyle = {
     "grid-column": "1/3",
@@ -22,6 +27,11 @@ const CardListingPage = ()=>{
   const actionStyle = {
     "grid-column": "5/7",
   };
+
+  const changePerPage=(value)=>{
+    console.log("asdasd")
+      dispatch(changeListPerPage(value))
+  }
 
   const changeTableState = (index) => {
     let navItems = tableNav.current.children;
@@ -37,8 +47,11 @@ const CardListingPage = ()=>{
     navItems.item(index).appendChild(myNavElement);
   };
 
+  const indexOfLastRequest = paginatorData.currentPage* paginatorData.perPage
+  const indexOfFirstRequest = indexOfLastRequest - paginatorData.perPage
+  const paginatedList = bankCardListing.slice(indexOfFirstRequest,indexOfLastRequest)
 
-    return <div className="display-area w-full h-full px-10 flex flex-col">
+    return <div className="display-area w-full h-full px-[3vw] flex flex-col">
     <div className="bread-crumps-grp mt-4 flex items-center gap-2 ">
       <IonHome />
       <p className="text-stone-400 text-[0.73rem] mt-[0.15rem] font-semibold">
@@ -72,7 +85,7 @@ const CardListingPage = ()=>{
         </div>
       </div>
       <div id="other-filter-grp" className="flex gap-5">
-        <CustomDropDown icon={<UiwDate />} title="Date" />
+        {/* <CustomDropDown icon={<UiwDate />} title="Date" /> */}
 
         <CustomDropDown
           icon={<FluentTag28Regular />}
@@ -134,53 +147,47 @@ const CardListingPage = ()=>{
     <div className="paginationController my-2 flex justify-between">
       <div id="page-info-grp">
         <p className="text-stone-400 text-[0.8rem] font-medium">
-          showing 12 - 30 of results
+          showing {indexOfFirstRequest} - {indexOfLastRequest > bankCardListing.length?bankCardListing.length:indexOfLastRequest } of results
         </p>
       </div>
-      <div id="paginator" className="flex items-center gap-6">
-        <EpArrowLeft />
-        <div className="numbers flex gap-4 select-none">
-            {["1","2","3","4","5"].map(val=>{
-                return <p key={val} className="font-semibold text-[0.8rem]" >{val}</p>
-            })}
-        </div>
-        <div className="rotate rotate-180">
-          <EpArrowLeft />
-        </div>
-      </div>
+      <PaginationController listsPerPage={paginatorData.perPage} totalLists={bankCardListing.length} />
       <div id="perpage-modifier" className="flex items-center gap-4">
       <p className="text-stone-400 text-[0.8rem] font-medium">
           Request per page
         </p>
-        <CustomDropDown title="10" items={["5","10","15"]}/>
+        <CustomDropDown title={paginatorData.perPage} items={["5","10","15"]} onChange={changePerPage}/>
       </div>
     </div>
-    <div className="grid grid-cols-8 gap-7 grid-rows-1 rounded-xl p-2 bg-[#f9f9f9]">
+    <div className="flex gap-4 rounded-xl p-2 bg-[#f9f9f9]">
           {/* header */}
           <p
-            className="text-[0.76rem] font-medium text-stone-500"
+          
+            className="w-11/12 text-[0.76rem] font-medium text-stone-500"
             style={contactStyle}
           >
             Contact Info
           </p>
-          <p className="text-[0.76rem] text-stone-500">NIN</p>
-          <p className="text-[0.76rem] text-stone-500">Request Date</p>
-          <p className="text-[0.76rem] text-stone-500" style={actionStyle}>Request Status</p>
-          <p className="text-[0.76rem] text-stone-500">Request Type</p>
-          <p className="text-[0.76rem] text-stone-500">
+          <p className="text-[0.76rem] text-stone-500 w-1/2">NIN</p>
+          <p className="text-[0.76rem] text-stone-500 w-4/5">Request Date</p>
+          <p className="text-[0.76rem] text-stone-500 w-full" style={actionStyle}>Request Status</p>
+          <p className="text-[0.76rem] text-stone-500 w-2/5">Request Type</p>
+          <p className="text-[0.76rem] text-stone-500 w-1/2">
             Actions
           </p>
 
           {/* end of header */}
         </div>
         <div className="flex flex-col gap-6 mt-4 h-full overflow-scroll pb-5 no-bars">
-          <CardRequestListingCard  status="done"/>
+          {paginatedList.map(e=>{
+            return <CardRequestListingCard key={e.id}  listData={e}/>
+          })}
+          {/* <CardRequestListingCard  status="done"/>
           <CardRequestListingCard />
           <CardRequestListingCard />
           <CardRequestListingCard />
           <CardRequestListingCard status="approved"/>
           <CardRequestListingCard />
-          <CardRequestListingCard status="ready"/>
+          <CardRequestListingCard status="ready"/> */}
         </div>
 
   </div>

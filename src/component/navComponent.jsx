@@ -15,35 +15,35 @@ const NavComponent = () => {
   };
 
   return (
-    <div className="w-1/4 h-full bg-[#001a07] px-10 py-10">
+    <div className="w-fit lg:w-1/4 h-full bg-[#001a07]  px-4 lg:px-[clamp(1em,2vw,2.5em)] py-10 ">
       <div className="flex items-center gap-4 justify-start">
         <img src={greenLogo} alt="Nicard Logo" className="w-[3em]" />
-        <h1 className="text-[#208a3d] text-xl font-semibold">Nicard</h1>
+        <h1 className="hidden lg:block text-[#208a3d] text-xl font-semibold">Nicard</h1>
       </div>
       <div className="mt-10  flex flex-col gap-3">
-        <div onClick={()=> changeSelected(0)} className={`flex items-center gap-2 ${currentNavIndex===0?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%] rounded-md cursor-pointer`}>
+        <div onClick={()=> changeSelected(0)} className={`flex items-center gap-2 ${currentNavIndex===0?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%] rounded-md cursor-pointer`}>
           <img src={dashboardIcon} alt="Nicard Logo" className="w-[1.3em] h-[1.3em]" />
-          <h2 className="text-white font-medium">Dashbaord</h2>
+          <h2 className="hidden lg:block text-white font-medium">Dashbaord</h2>
         </div>
-        <div onClick={()=> changeSelected(1)} className={`flex items-center gap-2 ${currentNavIndex ===1?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+        <div onClick={()=> changeSelected(1)} className={`flex items-center gap-2 ${currentNavIndex ===1?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%]  rounded-md cursor-pointer`}>
           <MaterialSymbolsAddCardOutlineRounded />
-          <h2 className="text-white font-medium">Request</h2>
+          <h2 className="hidden lg:block text-white font-medium">Request</h2>
         </div>
-        <div onClick={()=> changeSelected(2)} className={`flex items-center gap-2 ${currentNavIndex ===2?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+        <div onClick={()=> changeSelected(2)} className={`flex items-center gap-2 ${currentNavIndex ===2?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%]  rounded-md cursor-pointer`}>
           <MdiCreditCardSyncOutline />
-          <h2 className="text-white font-medium">Renew</h2>
+          <h2 className="hidden lg:block text-white font-medium">Renew</h2>
         </div>
-        <div onClick={()=> changeSelected(3)} className={`flex items-center gap-2 ${currentNavIndex ===3?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+        <div onClick={()=> changeSelected(3)} className={`flex items-center gap-2 ${currentNavIndex ===3?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%]  rounded-md cursor-pointer`}>
           <MaterialSymbolsCreditCardGearOutline />
-          <h2 className="text-white font-medium">Replace</h2>
+          <h2 className="hidden lg:block text-white font-medium">Replace</h2>
         </div>
-        <div onClick={()=> changeSelected(4)} className={`flex items-center gap-2 ${currentNavIndex ===4?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+        <div onClick={()=> changeSelected(4)} className={`flex items-center gap-2 ${currentNavIndex ===4?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%]  rounded-md cursor-pointer`}>
           <MdiCreditCardRemoveOutline />
-          <h2 className="text-white font-medium">Block</h2>
+          <h2 className="hidden lg:block text-white font-medium">Block</h2>
         </div>
-        <div onClick={()=> changeSelected(5)} className={`flex items-center gap-2 ${currentNavIndex ===5?"bg-[#2baf50] opacity-100":"opacity-70"} py-3 px-[10%]  rounded-md cursor-pointer`}>
+        <div onClick={()=> changeSelected(5)} className={`flex items-center gap-2 ${currentNavIndex ===5?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%]  rounded-md cursor-pointer`}>
           <FaSolidUsers />
-          <h2 className="text-white font-medium">Access Control</h2>
+          <h2 className="hidden lg:block text-white font-medium">Access Control</h2>
         </div>
         
       </div>

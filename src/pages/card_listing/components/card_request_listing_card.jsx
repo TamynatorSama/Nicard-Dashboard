@@ -1,15 +1,12 @@
 import CustomDropDown from "../../../component/customDropdown";
+import { CardRequestStatusList } from "../../../utils/requestStatus";
 
-const CardRequestListingCard = ({ status = "Pending NIMC Verification" }) => {
-  const contactStyle = {
-    "grid-column": "1/3",
-  };
-  const actionStyle = {
-    "grid-column": "5/7",
-  };
+
+const CardRequestListingCard = ({ listData }) => {
+  
   let statusStyle = {};
 
-  switch (status.split(" ")[0].toLowerCase()) {
+  switch (listData.request_status[0].request_status_slug.split(" ")[0].toLowerCase()) {
     case "pending":
       statusStyle = {
         "background-color": "#ffe5c8",
@@ -41,22 +38,26 @@ const CardRequestListingCard = ({ status = "Pending NIMC Verification" }) => {
       };
       break;
     default:
+      statusStyle = {
+        "background-color": "rgba(239, 68, 68,0.9)",
+        color: "white",
+      };
       break;
   }
 
   return (
-    <div className="hover:shadow-md rounded-xl transition-all duration-200 grid grid-cols-8 gap-7  p-2 grid-rows-1">
-      <div style={contactStyle}>
-        <h1 className="text-[0.8rem] font-medium w-full text-stone-800">
-          Tamilore Kolawole
+    <div className="hover:shadow-md rounded-xl transition-all duration-200 flex items-center gap-4  p-2 ">
+      <div className="w-11/12">
+        <h1 className="text-[0.8rem] font-medium w-full text-stone-800 te">
+          {listData.user_data[0].first_name + " " + listData.user_data[0].last_name}
         </h1>
         <p className="text-[0.7em] text-stone-500 w-full">09063976031</p>
       </div>
-      <h1 className="text-[0.8rem] font-medium w-full text-stone-800">
-        33349204234
+      <h1 className="text-[0.8rem] font-medium text-stone-800 w-1/2">
+        {listData.nin}
       </h1>
-      <h1 className="text-[0.8rem] font-medium w-full text-stone-400">
-        {new Date("2024-01-25T11:27:47.137Z").toLocaleDateString("en-us", {
+      <h1 className="text-[0.8rem] font-medium w-4/5 text-stone-400">
+        {new Date(listData.created_at).toLocaleDateString("en-us", {
           weekday: "short",
           year: "numeric",
           month: "short",
@@ -66,18 +67,20 @@ const CardRequestListingCard = ({ status = "Pending NIMC Verification" }) => {
         })}
       </h1>
 
-      <div style={actionStyle}>
+      <div className="w-full">
         <h1
           className={`text-[0.8rem] font-medium w-fit h-fit p-2 leading-none text-center rounded-2xl text-stone-400`}
           style={statusStyle}
         >
-          {status}
+          {listData.request_status[0].request_status_slug}
         </h1>
       </div>
-      <h1 className="text-[0.8rem] font-medium w-full text-stone-700">
-        Renew
+      <h1 className="text-[0.8rem] font-medium text-stone-700 w-2/5">
+        {listData.request_type[0].request_type_slug}
       </h1>
-      <CustomDropDown title="Actions" items={["Approve","Processing","Done","Ready for Pickup"]}/>
+      <div className="w-1/2">
+      <CustomDropDown title="Actions" optional_id={listData.id} items={CardRequestStatusList.filter(e=>e.step > listData.request_status[0].step).map(e=>e.request_status_slug)} isAction={true}/>
+      </div>
     </div>
   );
 };
