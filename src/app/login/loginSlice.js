@@ -9,17 +9,7 @@ const initState={
     loginData:{}
 }
 
-const notify = (message) => toast.success(`${message}`, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: true,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
-    transition: Bounce,
-    });
+
 const notifyError = (message) => toast.error(`${message}`, {
       position: "top-right",
       autoClose: 2000,
@@ -71,7 +61,6 @@ const loginSlice = createSlice({
                 state.token = action.payload?.data.result.token
                 localStorage.setItem('token',state.token)
                 state.loginData = action.payload?.data.result.user_payload
-                notify(action.payload.message)
                 return;
             }
             

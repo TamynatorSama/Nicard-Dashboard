@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { appAxios } from "../utils/axiosConfig"
 import { CardRequestStatusList } from "../utils/requestStatus";
 import { Bounce, toast } from "react-toastify";
+import { updateTokenFromStorage } from "./login/loginSlice";
 
 const initState = {
     institutionCardList: [],
@@ -23,7 +24,7 @@ const notifyError = (message) => toast.error(`${message}`, {
     });
 
 
-export const appDataThunk = createAsyncThunk('user/profile', async (token) => {
+export const appDataThunk = createAsyncThunk('user/profile', async (token,thukApi) => {
     try {
 
         const response = await appAxios.get('/user', {
@@ -38,7 +39,11 @@ export const appDataThunk = createAsyncThunk('user/profile', async (token) => {
             data: response.data,
         }
     } catch (e) {
-        console.log(e)
+        if(e.response.status == 403){
+            thukApi.dispatch(updateTokenFromStorage(""))
+            localStorage.removeItem("token")
+            
+        }
         if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
         } else if (e.response?.data?.message) {
@@ -137,10 +142,12 @@ const appSlice = createSlice({
         })
         builder.addCase(appDataThunk.fulfilled, (state, action) => {
             if (action.payload?.data?.result) {
+                
                 let result = action.payload?.data?.result
                 state.profileData = { ...result }
                 return;
             }
+            notifyError(action.payload)
             state.loading = "error"
             state.error = action.payload
 
@@ -173,7 +180,6 @@ const appSlice = createSlice({
         })
         builder.addCase(listUpdateThunk.fulfilled, (state, action) => {
             console.log(action.payload)
-            console.log("asdasd")
 
             if (action.payload?.data?.statusCode !== 200) {
                 let oldValue = action.payload.formerValue

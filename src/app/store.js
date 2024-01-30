@@ -5,6 +5,7 @@ import cardListingPaginatorReducer from './card_listing/pagination'
 import authReducer from './login/loginSlice'
 import appReducer from './appSlice'
 import listingFilterReducer from './card_listing/listingFilterSlice'
+import accessControlUserListReducer from "./access_control/user_list"
 
 export const store = configureStore({
     reducer:{
@@ -13,7 +14,8 @@ export const store = configureStore({
         listingPaginator: cardListingPaginatorReducer,
         authReducer,
         app: appReducer,
-        listFilter: listingFilterReducer
+        listFilter: listingFilterReducer,
+        accessList: accessControlUserListReducer
 
     }
 })

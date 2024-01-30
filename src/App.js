@@ -1,11 +1,11 @@
 import './App.css';
 // import Dashboard from './pages/dashboard';
-import {Route} from 'react-router-dom';
 import Login from './pages/login';
 import { createContext, useEffect} from "react"
 import NewDashboard from './pages/dashboard/newDashboard';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateTokenFromStorage } from './app/login/loginSlice';
+import { ToastContainer } from 'react-toastify';
 
 
 export const DataProvider = createContext({})
@@ -26,7 +26,7 @@ const dispatch = useDispatch()
     if(localToken && token.length<3){
       dispatch(updateTokenFromStorage(localToken))
     }
-  },[token,dispatch])
+  },[dispatch])
 
   // const appDataModifier =(newData)=>{
   //   console.log(newData)
@@ -47,7 +47,10 @@ const dispatch = useDispatch()
   //   },
   // ]);
 
-    return (token?<NewDashboard /> :<Login/>)
+    return <div>
+      {(token?<NewDashboard /> :<Login/>)}
+      <ToastContainer />
+    </div>
       // <Routes>
       //   <Route path='/login' element={<Login/>}/>
         
