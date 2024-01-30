@@ -24,8 +24,9 @@ const CardRequestPage = () => {
           Fill in the NIN and Date of Birth fields to get the <b>First Name</b>{" "}
           and <b>Last Name</b> fields
         </p>
-        <div className="verification-details flex gap-5">
-          <div className="ni">
+        <div className="verification-details flex flex-col">
+          <div className="flex gap-5">
+          <div className="ni w-full">
             <CustomInputField
               type="tel"
               value={formState.nin}
@@ -34,8 +35,8 @@ const CardRequestPage = () => {
               pattern="[0-9\s]{11}"
               inputMode="numeric"
             />
-            <p className="text-[0.6rem] font-semibold mt-1 text-stone-400">
-              This should be 11 digits long
+            <p className="text-[0.6rem] font-semibold mt-1 text-stone-600 uppercase">
+              NIN should be 11 digits long
             </p>
           </div>
 
@@ -45,6 +46,12 @@ const CardRequestPage = () => {
             value={formState.date_of_birth}
             name="date_of_birth"
           />
+          </div>
+          <button
+          type="submit"
+          className="outline-white w-full grid place-content-center bg-[#2baf50] max-w-[20rem] text-white font-bold py-3 rounded-md mt-4"
+        >
+          Verify</button>
         </div>
         <p className="text-[0.8rem] text-stone-600 font-bold mb-2 mt-6">
           Personal Details
@@ -65,6 +72,7 @@ const CardRequestPage = () => {
             />
           </div>
           <CustomInputField
+            
             value={formState.middle_name}
             name="middle_name"
             label="Middle Name"

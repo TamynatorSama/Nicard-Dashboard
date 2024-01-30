@@ -1,39 +1,65 @@
 
 import CardRequestListingCard from "./components/card_request_listing_card";
 import CustomDropDown from "../../component/customDropdown";
+import { CardRequestStatusList } from "../../utils/requestStatus";
 import {
-  FluentTag28Regular,
   IconamoonSearch,
   IonHome,
   MaterialSymbolsDiscoverTuneRounded,
 } from "../../component/icons";
-import { useRef } from "react";
+import { useRef ,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cardList } from "../../app/appSlice";
+import { cardList, profileData } from "../../app/appSlice";
 import PaginationController from "./components/pagination_controller";
 import { changeListPerPage } from "../../app/card_listing/pagination";
+import { updateRequestStatus, updateRequestType, updateSearch } from "../../app/card_listing/listingFilterSlice";
 
 const CardListingPage = ()=>{
 
     const paginatorData = useSelector(state=>state.listingPaginator)
+    const profile = useSelector(profileData)
+    const filter = useSelector(state=>state.listFilter)
     const dispatch = useDispatch()
 
     const tableNav = useRef();
     const bankCardListing = useSelector(cardList)
 
-  const contactStyle = {
-    "grid-column": "1/3",
-  };
-  const actionStyle = {
-    "grid-column": "5/7",
-  };
+    const changeReuqestType = (value) =>{
+      dispatch(updateRequestType(value))
+    }
+  
 
   const changePerPage=(value)=>{
-    console.log("asdasd")
       dispatch(changeListPerPage(value))
   }
+  const updateSearchText=(ev)=>{
+    if(ev.target.name === 'search'){
+      dispatch(updateSearch(ev.target.value))
+    }
+  }
 
-  const changeTableState = (index) => {
+
+  const updateShowableList=()=>{
+    return bankCardListing.filter(ev=>ev.id.toLowerCase().includes(filter.searchText.toLowerCase()) || ev.nin.includes(filter.searchText)||ev.user_data[0].first_name.toLowerCase().includes(filter.searchText.toLowerCase())||ev.user_data[0].last_name.toLowerCase().includes(filter.searchText.toLowerCase())).filter(ev=>{
+      if(filter.request_status == 10){
+        return ev
+      }
+      if(ev.request_status[0].id == filter.request_status){
+        return ev
+      }
+    }).filter(ev=>{
+      if(filter.request_type.toLowerCase().includes("all")){
+        return ev
+      }
+      if(ev.request_type[0].request_type_slug.toLowerCase().includes(filter.request_type.toLowerCase().split(" ")[0])){
+        return ev
+      }
+    })
+  }
+
+
+
+  const changeTableState = (index,statusId) => {
     let navItems = tableNav.current.children;
 
     let myNavElement;
@@ -45,11 +71,14 @@ const CardListingPage = ()=>{
       }
     }
     navItems.item(index).appendChild(myNavElement);
+    dispatch(updateRequestStatus(statusId))
   };
+  console.log(profile)
 
+  let filteredList = updateShowableList()
   const indexOfLastRequest = paginatorData.currentPage* paginatorData.perPage
   const indexOfFirstRequest = indexOfLastRequest - paginatorData.perPage
-  const paginatedList = bankCardListing.slice(indexOfFirstRequest,indexOfLastRequest)
+  const paginatedList = filteredList.slice(indexOfFirstRequest,indexOfLastRequest)
 
     return <div className="display-area w-full h-full px-[3vw] flex flex-col">
     <div className="bread-crumps-grp mt-4 flex items-center gap-2 ">
@@ -61,7 +90,7 @@ const CardListingPage = ()=>{
       </p>
     </div>
     <div className="title-grp">
-      <h1 className="mt-3 text-4xl font-medium">Unity Bank</h1>
+      <h1 className="mt-3 text-4xl font-medium"></h1>
       <p className="text-stone-400 text-[0.9rem] font-semibold">
         Card Request Listing
       </p>
@@ -79,6 +108,8 @@ const CardListingPage = ()=>{
           <input
             className="outline-none border-none bg-transparent text-[1.1em]"
             type="text"
+            onChange={updateSearchText}
+            value={filter.searchText}
             name="search"
             placeholder="search ..."
           />
@@ -87,7 +118,7 @@ const CardListingPage = ()=>{
       <div id="other-filter-grp" className="flex gap-5">
         {/* <CustomDropDown icon={<UiwDate />} title="Date" /> */}
 
-        <CustomDropDown
+        {/* <CustomDropDown
           icon={<FluentTag28Regular />}
           title="Status"
           items={[
@@ -98,11 +129,13 @@ const CardListingPage = ()=>{
             "Done",
             "Ready for Pickup",
           ]}
-        />
+        /> */}
         <CustomDropDown
+        onChange={changeReuqestType}
           icon={<MaterialSymbolsDiscoverTuneRounded />}
-          title="Request Types"
+          title={filter.request_type}
           items={[
+            "All Request",
             "Request Card",
             "Renew Card",
             "Replace Card",
@@ -117,23 +150,19 @@ const CardListingPage = ()=>{
       ref={tableNav}
       className="flex gap-8 border-b-2 border-[#f8f8f8] select-none"
     >
-      {[
-        "All Requests",
-        "Pending NIMC Validation",
-        "Pending Bank Validation",
-        "Approved",
-        "Processing",
-        "Done",
-        "Ready for Pickup",
-      ].map((val, index) => {
+      {[{
+        id: "10",
+        request_status_slug: "All Status",
+        step: 100
+      },...CardRequestStatusList].map((val,index) => {
         return (
           <div
-            key={index}
+            key={val.id}
             className="cursor-pointer"
-            onClick={() => changeTableState(index)}
+            onClick={() => changeTableState(index,val.id)}
           >
-            <div>
-              <p className="text-[0.7rem] font-semibold">{val}</p>
+            <div className="">
+              <p className="text-[0.7rem] text-center  font-semibold">{val.request_status_slug}</p>
             </div>
             {index === 0 ? (
               <div className="w-full h-1 bg-[#208a3d] rounded-lg mt-2 transition-all duration-700 navigator"></div>
@@ -147,10 +176,10 @@ const CardListingPage = ()=>{
     <div className="paginationController my-2 flex justify-between">
       <div id="page-info-grp">
         <p className="text-stone-400 text-[0.8rem] font-medium">
-          showing {indexOfFirstRequest} - {indexOfLastRequest > bankCardListing.length?bankCardListing.length:indexOfLastRequest } of results
+          showing { indexOfFirstRequest} - {indexOfLastRequest > filteredList.length?filteredList.length:indexOfLastRequest } of results
         </p>
       </div>
-      <PaginationController listsPerPage={paginatorData.perPage} totalLists={bankCardListing.length} />
+      <PaginationController listsPerPage={paginatorData.perPage} totalLists={filteredList.length} totalItems={filteredList.length} />
       <div id="perpage-modifier" className="flex items-center gap-4">
       <p className="text-stone-400 text-[0.8rem] font-medium">
           Request per page
@@ -163,13 +192,13 @@ const CardListingPage = ()=>{
           <p
           
             className="w-11/12 text-[0.76rem] font-medium text-stone-500"
-            style={contactStyle}
+            
           >
             Contact Info
           </p>
           <p className="text-[0.76rem] text-stone-500 w-1/2">NIN</p>
           <p className="text-[0.76rem] text-stone-500 w-4/5">Request Date</p>
-          <p className="text-[0.76rem] text-stone-500 w-full" style={actionStyle}>Request Status</p>
+          <p className="text-[0.76rem] text-stone-500 w-full">Request Status</p>
           <p className="text-[0.76rem] text-stone-500 w-2/5">Request Type</p>
           <p className="text-[0.76rem] text-stone-500 w-1/2">
             Actions

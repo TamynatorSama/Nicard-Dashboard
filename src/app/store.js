@@ -4,6 +4,7 @@ import cardRequestFormReducer from './card_request/requestFormSlice'
 import cardListingPaginatorReducer from './card_listing/pagination'
 import authReducer from './login/loginSlice'
 import appReducer from './appSlice'
+import listingFilterReducer from './card_listing/listingFilterSlice'
 
 export const store = configureStore({
     reducer:{
@@ -11,7 +12,8 @@ export const store = configureStore({
         cardRequestForm: cardRequestFormReducer,
         listingPaginator: cardListingPaginatorReducer,
         authReducer,
-        app: appReducer
+        app: appReducer,
+        listFilter: listingFilterReducer
 
     }
 })

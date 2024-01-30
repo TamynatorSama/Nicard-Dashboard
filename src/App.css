@@ -71,8 +71,11 @@ select {
   padding: 3px 10px;
   border-radius: 5px;
 }
-.drop input:checked ~ .down {
+.drop:focus input:checked ~ .down {
   display: flex;
+}
+.drop:focus input:checked ~ .arrow{
+  transform: rotate(180deg);
 }
 .down{
   bottom: 0;
@@ -97,9 +100,6 @@ select {
   margin: 0;
   padding: 0;
   cursor: pointer;
-}
-.drop input:checked ~ .arrow{
-  transform: rotate(180deg);
 }
 .inputBox input{
   border-radius: 8px;
@@ -151,7 +151,4 @@ input:-webkit-autofill:active {
 .inputBox input:not(:valid):not(:focus):not(:placeholder-shown){
   border: 2px solid red ;
   background: white;
-}
-.drop:not(:focus) .test{
-  display: none;
 }

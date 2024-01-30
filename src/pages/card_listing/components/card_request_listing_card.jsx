@@ -1,10 +1,17 @@
+import { useDispatch, useSelector } from "react-redux";
 import CustomDropDown from "../../../component/customDropdown";
 import { CardRequestStatusList } from "../../../utils/requestStatus";
+import { listUpdateThunk, updateReqestStatus } from "../../../app/appSlice";
 
 
 const CardRequestListingCard = ({ listData }) => {
   
   let statusStyle = {};
+  const dispatch = useDispatch()
+  const authState = useSelector(state=>state.authReducer)
+
+
+  let token = authState.token
 
   switch (listData.request_status[0].request_status_slug.split(" ")[0].toLowerCase()) {
     case "pending":
@@ -45,13 +52,23 @@ const CardRequestListingCard = ({ listData }) => {
       break;
   }
 
+  const onChangeAction=(update)=>{
+    dispatch(updateReqestStatus(update))
+    dispatch(listUpdateThunk({
+      data:{request_id:update.request_id,status_id: update.request_status_id},
+      old_status_id:update.old_status_id,
+      token
+    }))
+    // listUpdateThunk
+  }
+
   return (
     <div className="hover:shadow-md rounded-xl transition-all duration-200 flex items-center gap-4  p-2 ">
       <div className="w-11/12">
         <h1 className="text-[0.8rem] font-medium w-full text-stone-800 te">
           {listData.user_data[0].first_name + " " + listData.user_data[0].last_name}
         </h1>
-        <p className="text-[0.7em] text-stone-500 w-full">09063976031</p>
+        <p className="text-[0.7em] text-stone-500 w-full">{listData.user_data[0].phone_number}</p>
       </div>
       <h1 className="text-[0.8rem] font-medium text-stone-800 w-1/2">
         {listData.nin}
@@ -79,7 +96,11 @@ const CardRequestListingCard = ({ listData }) => {
         {listData.request_type[0].request_type_slug}
       </h1>
       <div className="w-1/2">
-      <CustomDropDown title="Actions" optional_id={listData.id} items={CardRequestStatusList.filter(e=>e.step > listData.request_status[0].step).map(e=>e.request_status_slug)} isAction={true}/>
+      <CustomDropDown title="Actions" onChange={(value)=>onChangeAction({
+        request_id: listData.id,
+        old_status_id: listData.request_status[0].id,
+        request_status_id: CardRequestStatusList.find(ev=> ev.request_status_slug.toLowerCase() === value.toLowerCase()).id
+      })} optional_id={listData.id} items={CardRequestStatusList.filter(e=>e.step > listData.request_status[0].step).map(e=>e.request_status_slug)} isAction={true}/>
       </div>
     </div>
   );

@@ -1,30 +1,47 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import { appAxios } from "../utils/axiosConfig"
+import { CardRequestStatusList } from "../utils/requestStatus";
+import { Bounce, toast } from "react-toastify";
 
 const initState = {
-    institutionCardList:[],
-    profileData:{},
+    institutionCardList: [],
+    profileData: {},
     loading: "idle", //idle,loading,success,error
-    error:null
+    error: null
 }
 
+const notifyError = (message) => toast.error(`${message}`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    transition: Bounce,
+    });
 
-export const appDataThunk = createAsyncThunk('user/profile',async(token)=>{
-    try{
-        
-        const response = await appAxios.get('/user',{headers: {
-            "Authorization": `Bearer ${token}`
-        }})
-        
+
+export const appDataThunk = createAsyncThunk('user/profile', async (token) => {
+    try {
+
+        const response = await appAxios.get('/user', {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        })
+
         // const response = await appAxios.get('cards/getBankCardRequests/:bankId')
-        
+
         return {
-            data:response.data,}
-    }catch(e){
+            data: response.data,
+        }
+    } catch (e) {
         console.log(e)
-        if(e.response?.data?.error){
+        if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
-        }else if(e.response?.data?.message){
+        } else if (e.response?.data?.message) {
             return e.response?.data?.message
         }
         else {
@@ -32,20 +49,64 @@ export const appDataThunk = createAsyncThunk('user/profile',async(token)=>{
         }
     }
 })
-export const cardListThunk = createAsyncThunk('card/list',async(access)=>{
-    try{
-        
-        const response = await appAxios.get(`/cards/getBankCardRequests/${access.bank_id}`,{headers: {
-            "Authorization": `Bearer ${access.token}`
-        }})
-        
+
+
+export const listUpdateThunk = createAsyncThunk('card/updateStatus', async (value) => {
+    try {
+
+        const response = await appAxios.patch(`/cards/updateCardRequest`,value.data,{
+            headers: {
+                "Authorization": `Bearer ${value.token}`
+            }
+        })
+        console.log(response)
+
         return {
-            data:response.data,}
-    }catch(e){
+            data: response.data,
+            formerValue: {...value.data,status_id:value.old_status_id}
+        }
+    } catch (e) {
         console.log(e)
-        if(e.response?.data?.error){
+        if (e.response?.data?.error) {
+            return {
+                data: Object.values(e.response.data.error).flat()[0],
+                formerValue: {...value.data,status_id:value.old_status_id}
+            }
+        } else if (e.response?.data?.message) {
+            return {
+                data: e.response?.data?.message,
+                formerValue: {...value.data,status_id:value.old_status_id}
+            }
+            
+        }
+        else {
+            return {
+                data: e.message,
+                formerValue: {...value.data,status_id:value.old_status_id}
+            }
+        }
+    }
+
+}
+)
+
+export const cardListThunk = createAsyncThunk('card/list', async (access) => {
+    try {
+
+        const response = await appAxios.get(`/cards/getBankCardRequests/${access.bank_id}`, {
+            headers: {
+                "Authorization": `Bearer ${access.token}`
+            }
+        })
+
+        return {
+            data: response.data,
+        }
+    } catch (e) {
+        console.log(e)
+        if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
-        }else if(e.response?.data?.message){
+        } else if (e.response?.data?.message) {
             return e.response?.data?.message
         }
         else {
@@ -57,55 +118,92 @@ export const cardListThunk = createAsyncThunk('card/list',async(access)=>{
 const appSlice = createSlice({
     name: "appSlice",
     initialState: initState,
-    reducers:{
-
+    reducers: {
+        updateReqestStatus:(state,action)=>{
+            
+            state.institutionCardList = state.institutionCardList.map(mapVal=>{
+                if(mapVal.id == action.payload.request_id){
+                    console.log(action.payload.request_status_id)
+                    console.log(CardRequestStatusList.find(ev=>ev.id === action.payload.request_status_id))
+                    return {...mapVal,request_status: [CardRequestStatusList.find(ev=>ev.id === action.payload.request_status_id)]}
+                }
+                return mapVal
+            })
+        }
     },
-    extraReducers(builder){
-        builder.addCase(appDataThunk.pending,(state,action)=>{
+    extraReducers(builder) {
+        builder.addCase(appDataThunk.pending, (state, action) => {
             state.loading = "loading"
         })
-        builder.addCase(appDataThunk.fulfilled,(state,action)=>{
-            if(action.payload?.data?.result){
+        builder.addCase(appDataThunk.fulfilled, (state, action) => {
+            if (action.payload?.data?.result) {
                 let result = action.payload?.data?.result
-                state.profileData= {...result}
+                state.profileData = { ...result }
                 return;
             }
             state.loading = "error"
-            state.error=action.payload
-            
+            state.error = action.payload
+
         })
-        builder.addCase(appDataThunk.rejected,(state,action)=>{
+        builder.addCase(appDataThunk.rejected, (state, action) => {
             state.loading = "error"
-            state.error=action.error
+            state.error = action.error
             // notifyError(action.error)
 
         })
-        builder.addCase(cardListThunk.fulfilled,(state,action)=>{
-            
-            if(action.payload?.data?.result){
-               
+        builder.addCase(cardListThunk.fulfilled, (state, action) => {
+
+            if (action.payload?.data?.result) {
+
                 state.loading = "success"
                 let result = action.payload?.data?.result
-                state.institutionCardList= [...result]
-                console.log(state.institutionCardList)
+                state.institutionCardList = [...result]
                 return;
             }
             state.loading = "error"
 
-            state.error=action.payload
-            
+            state.error = action.payload
+
         })
-        builder.addCase(cardListThunk.rejected,(state,action)=>{
+        builder.addCase(cardListThunk.rejected, (state, action) => {
             state.loading = "error"
-            state.error=action.error
+            state.error = action.error
             // notifyError(action.error)
+
+        })
+        builder.addCase(listUpdateThunk.fulfilled, (state, action) => {
+            console.log(action.payload)
+            console.log("asdasd")
+
+            if (action.payload?.data?.statusCode !== 200) {
+                let oldValue = action.payload.formerValue
+                state.institutionCardList = state.institutionCardList.map(mapVal=>{
+                    if(mapVal.id == oldValue.request_id){
+                        console.log(oldValue.status_id)
+                        console.log(CardRequestStatusList.find(ev=>ev.id == oldValue.status_id))
+                        return {...mapVal,request_status: [CardRequestStatusList.find(ev=>ev.id === oldValue.status_id)]}
+                    }
+                    return mapVal
+                })
+                
+                notifyError(action.payload.data)
+            }
+            
+            
+
+        })
+        builder.addCase(listUpdateThunk.rejected, (state, action) => {
+            notifyError(action.error)
 
         })
     }
 })
 
-export const appLoadingState = (state)=>state.app.loading
-export const cardList = state=>state.app.institutionCardList
+export const {updateReqestStatus} = appSlice.actions
+
+export const appLoadingState = (state) => state.app.loading
+export const profileData = (state) => state.app.profileData
+export const cardList = state => state.app.institutionCardList
 
 export default appSlice.reducer
 
