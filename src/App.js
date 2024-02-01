@@ -8,13 +8,27 @@ import CardRenewPage from './pages/card_renew';
 import CardReplacementPage from './pages/card_replace';
 import CardBlockPage from './pages/card_block';
 import AccessControlPage from './pages/access_control';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { updateState } from './app/access_control/createNewUserSlice';
 
 function App() {
+  const dispatch = useDispatch()
 
-  // const authState = useSelector(state=>state.authReducer)
-
-  // let token = authState.token
-  // const dispatch = useDispatch()
+  useEffect(()=>{
+  //   let localToken = localStorage.getItem("token")
+  //   if(localToken && token.length<3){
+  //     dispatch(updateTokenFromStorage(localToken))
+  //   }
+    window.onclick = function(event) {
+      if (event.target.id === 'myModal') {
+        dispatch(updateState({
+          key:"isModalOpen",
+          value: false
+        }))
+      }
+    }
+  },[])
 
   return (
     <Routes>
@@ -32,20 +46,7 @@ function App() {
   )
 
 
-  // useEffect(()=>{
-  //   let localToken = localStorage.getItem("token")
-  //   if(localToken && token.length<3){
-  //     dispatch(updateTokenFromStorage(localToken))
-  //   }
-  //   window.onclick = function(event) {
-  //     if (event.target.id === 'myModal') {
-  //       dispatch(updateState({
-  //         key:"isModalOpen",
-  //         value: false
-  //       }))
-  //     }
-  //   }
-  // },[dispatch])
+
 
 
   // return <div>

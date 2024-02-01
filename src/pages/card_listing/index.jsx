@@ -40,11 +40,11 @@ const CardListingPage = ()=>{
 
 
   const updateShowableList=()=>{
-    return bankCardListing.filter(ev=>ev.id.toLowerCase().includes(filter.searchText.toLowerCase()) || ev.nin.includes(filter.searchText)||ev.user_data[0].first_name.toLowerCase().includes(filter.searchText.toLowerCase())||ev.user_data[0].last_name.toLowerCase().includes(filter.searchText.toLowerCase())).filter(ev=>{
-      if(filter.request_status == 10){
+    return bankCardListing.filter(ev=>ev.id.toLowerCase().includes(filter.searchText.toLowerCase()) || ev.user_info[0].nin.includes(filter.searchText)||ev.user_info[0].first_name.toLowerCase().includes(filter.searchText.toLowerCase())||ev.user_info[0].last_name.toLowerCase().includes(filter.searchText.toLowerCase())).filter(ev=>{
+      if(filter.request_status === 10){
         return ev
       }
-      if(ev.request_status[0].id == filter.request_status){
+      if(ev.request_status[0].id === filter.request_status){
         return ev
       }
     }).filter(ev=>{

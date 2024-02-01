@@ -66,12 +66,12 @@ const CardRequestListingCard = ({ listData }) => {
     <div className="hover:shadow-md rounded-xl transition-all duration-200 flex items-center gap-4  p-2 ">
       <div className="w-11/12">
         <h1 className="text-[0.8rem] font-medium w-full text-stone-800 te">
-          {listData.user_data[0].first_name + " " + listData.user_data[0].last_name}
+          {listData.user_info[0].first_name + " " + listData.user_info[0].last_name}
         </h1>
-        <p className="text-[0.7em] text-stone-500 w-full">{listData.user_data[0].phone_number}</p>
+        <p className="text-[0.7em] text-stone-500 w-full">{listData.user_info[0].phone_number}</p>
       </div>
       <h1 className="text-[0.8rem] font-medium text-stone-800 w-1/2">
-        {listData.nin}
+        {listData.user_info[0].nin}
       </h1>
       <h1 className="text-[0.8rem] font-medium w-4/5 text-stone-400">
         {new Date(listData.created_at).toLocaleDateString("en-us", {

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { appAxios } from "./axiosConfig";
+import { addCardRequest } from "../app/appSlice";
 
 export const createCardRequestThunk = createAsyncThunk('card/thunk',async(request,thunkApi)=>{
     const state = thunkApi.getState().authReducer
@@ -12,6 +13,9 @@ export const createCardRequestThunk = createAsyncThunk('card/thunk',async(reques
             }
         })
         console.log(response.data)
+        if(response.status === 201){
+            thunkApi.dispatch(addCardRequest(response.data.result))
+        }
         return {
             data: response.data,
         }

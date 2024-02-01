@@ -112,7 +112,7 @@ select {
   border: 2px solid #2baf50;
   outline: none;
 }
-.inputBox input:not(:focus){
+.inputBox input:not(:focus),select:not(:focus){
   background: #2baf5014;
   border: 2px solid rgb(238, 238, 238);
 }
@@ -124,7 +124,7 @@ select {
   pointer-events: none;
   color: #9ca3af;
   font-size: 0.9rem;
-  transition: 0.5s;
+  transition: 0.2s;
 }
 .inputBox input:valid:not(:focus){
   background: white;

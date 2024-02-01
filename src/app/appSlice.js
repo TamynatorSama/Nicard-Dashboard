@@ -132,6 +132,9 @@ const appSlice = createSlice({
                 }
                 return mapVal
             })
+        },
+        addCardRequest:(state,action)=>{
+            state.institutionCardList.push(action.payload)
         }
     },
     extraReducers(builder) {
@@ -204,7 +207,7 @@ const appSlice = createSlice({
     }
 })
 
-export const {updateReqestStatus} = appSlice.actions
+export const {updateReqestStatus,addCardRequest} = appSlice.actions
 
 export const appLoadingState = (state) => state.app.loading
 export const profileData = (state) => state.app.profileData

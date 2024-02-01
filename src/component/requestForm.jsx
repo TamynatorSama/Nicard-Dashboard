@@ -38,6 +38,7 @@ const RequestForm=({request_id})=>{
       middle_name: formState.middle_name,
       date_of_birth: formState.date_of_birth,
       nin: formState.nin,
+      phone_number: formState.phone_number,
       bank_id: profile.institution.bank_data[0].id,
       branch_id: profile.institution.branch_code,
       card_type: formState.card_type

@@ -42,10 +42,10 @@ const AccessControlPage = () => {
 
   useEffect(() => {
     dispatch(getUserListingSlice({
-      bank_id: profile?.institution.bank_data[0].id,
+      bank_id: profile?.institution?.bank_data[0].id,
       token
     }))
-  }, [profile?.institution.bank_data[0].id, token, dispatch])
+  }, [profile?.institution?.bank_data, token, dispatch])
 
   return (
     <section className="display-area w-full h-full px-10 flex flex-col bg-[#f6f7fb]">
@@ -69,7 +69,7 @@ const AccessControlPage = () => {
       </div>
       <div className="w-full h-full bg-white rounded-t-2xl rounded-r-2xl mt-5 py-3 flex flex-col">
         <div id="tab-grp" ref={tableNav} className="flex gap-8 select-none mx-4">
-          {["All", "Admins", "Sub Admins"].map((val, index) => {
+          {["All", "Admins", "Users"].map((val, index) => {
             return (
               <div
                 key={index}
@@ -124,7 +124,7 @@ const AccessControlPage = () => {
 
             {
               <div className="down z-30 absolute w-full bg-white hidden flex-col gap-3 rounded-lg shadow-md text-[0.8rem] text-stone-700 font-semibold left-0 p-[0.55rem] cursor-pointer">
-                {["All", "Admins", "Sub Admins"].map((val) => {
+                {["All", "Admins", "User"].map((val) => {
                   return <p key={val}>{val}</p>
                 })}
               </div>
@@ -179,7 +179,7 @@ const AccessControlPage = () => {
           hour: "2-digit",
           minute: "2-digit",
         })}</h1>
-                  <h1 className="text-sm font-medium text-stone-700 w-1/2">{Object.keys(data.user_info[0].roles)[0]}</h1>
+                  <h1 className="text-sm font-medium text-stone-700 w-1/2">{Object.keys(data.user_info[0].roles)[0].split(" ")[1]}</h1>
                   <div className="w-1/2"></div>
 
                 </div>
