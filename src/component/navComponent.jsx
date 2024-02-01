@@ -6,12 +6,14 @@ import { FaSolidUsers, MaterialSymbolsAddCardOutlineRounded, MaterialSymbolsCred
 import { useDispatch, useSelector } from "react-redux";
 import { changePage } from "../app/navigator/navigatorSlice";
 import { Link } from "react-router-dom";
+import { resetFields } from "../app/card_request/requestFormSlice";
 const NavComponent = () => {
   const currentNavIndex = useSelector((state)=>state.navigator.selectedPage)
   const dispatch = useDispatch()
 
 
   function changeSelected(newIndex) {
+    dispatch(resetFields())
     dispatch(changePage(newIndex))
   };
 
