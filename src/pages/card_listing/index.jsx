@@ -7,9 +7,9 @@ import {
   IonHome,
   MaterialSymbolsDiscoverTuneRounded,
 } from "../../component/icons";
-import { useRef ,useState } from "react";
+import { useRef} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cardList, profileData } from "../../app/appSlice";
+import { cardList,profileData } from "../../app/appSlice";
 import PaginationController from "./components/pagination_controller";
 import { changeListPerPage } from "../../app/card_listing/pagination";
 import { updateRequestStatus, updateRequestType, updateSearch } from "../../app/card_listing/listingFilterSlice";
@@ -27,7 +27,7 @@ const CardListingPage = ()=>{
     const changeReuqestType = (value) =>{
       dispatch(updateRequestType(value))
     }
-  
+
 
   const changePerPage=(value)=>{
       dispatch(changeListPerPage(value))
@@ -73,6 +73,7 @@ const CardListingPage = ()=>{
     navItems.item(index).appendChild(myNavElement);
     dispatch(updateRequestStatus(statusId))
   };
+
   console.log(profile)
 
   let filteredList = updateShowableList()
@@ -90,7 +91,7 @@ const CardListingPage = ()=>{
       </p>
     </div>
     <div className="title-grp">
-      <h1 className="mt-3 text-4xl font-medium"></h1>
+      <h1 className="mt-3 text-4xl font-medium">{profile.institution?.bank_data[0].bank_name}</h1>
       <p className="text-stone-400 text-[0.9rem] font-semibold">
         Card Request Listing
       </p>

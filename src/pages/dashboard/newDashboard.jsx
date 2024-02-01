@@ -1,22 +1,25 @@
 
 import NavComponent from "../../component/navComponent";
 import { useDispatch, useSelector } from "react-redux";
-import CardListingPage from "../card_listing";
-import CardRequestPage from "../card_request";
-import CardRenewPage from "../card_renew";
-import CardReplacementPage from "../card_replace";
-import CardBlockPage from "../card_block";
-import AccessControlPage from "../access_control";
-import { appDataThunk, appLoadingState,cardListThunk } from "../../app/appSlice";
+import { appDataThunk, appLoadingState, cardListThunk, profileData } from "../../app/appSlice";
 import { ThreeDots } from "react-loader-spinner";
 import { useEffect } from "react";
+import { createUserModalState } from "../../app/access_control/createNewUserSlice";
+import CreateNewUserModal from "../../component/createNewUserModal";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import useAuth from "../../utils/hooks/useAuth";
+import { ToastContainer } from "react-toastify";
 
 const NewDashboard = () => {
-  const profileData = useSelector(state=>state.app.profileData)
-  const authState = useSelector(state=>state.authReducer)
+  const modalState = useSelector(createUserModalState)
+  const { isAuthenticated,token } = useAuth()
+  const profile = useSelector(profileData)
 
 
-  let token = authState.token
+
+    const location =  useLocation()
+
+
   const dispatch = useDispatch()
 
 
@@ -31,15 +34,17 @@ const NewDashboard = () => {
     const fetchCardRequests = async(bank_id)=>{
       dispatch(cardListThunk({token,bank_id}))
     }
-    if(profileData?.institution?.bank_data){
-      fetchCardRequests(profileData.institution.bank_data[0].id)
+    if(profile?.institution?.bank_data){
+      fetchCardRequests(profile.institution.bank_data[0].id)
     }
-  },[token,profileData,dispatch])
+  },[token,profile,dispatch])
 
-  const currentNavIndex = useSelector(state=>state.navigator.selectedPage)
+  // const currentNavIndex = useSelector(state=>state.navigator.selectedPage)
   const loadingState = useSelector(appLoadingState)
-
-  if(loadingState === "loading"){
+  if(!isAuthenticated){
+    return <Navigate to='/login' state={{from:location}} replace/>
+  }
+  else if(loadingState === "loading"){
     return (
       <main className="w-full h-svh flex justify-center items-center">
         <ThreeDots
@@ -56,13 +61,11 @@ const NewDashboard = () => {
     )
   }else{
     return (
-    
-      <main className="w-full h-svh flex">
+      <main className="w-full h-svh flex relative">
+        {modalState ? <CreateNewUserModal />:<></>}
         <NavComponent />
-        {
-          currentNavIndex ===0? <CardListingPage/> :currentNavIndex ===1? <CardRequestPage />:currentNavIndex ===2?<CardRenewPage/>:currentNavIndex ===3?<CardReplacementPage/>:currentNavIndex ===4?<CardBlockPage />:<AccessControlPage/>
-        }
-        
+        <Outlet />
+        <ToastContainer />
       </main>
     );
   }

@@ -1,73 +1,60 @@
 import './App.css';
-// import Dashboard from './pages/dashboard';
 import Login from './pages/login';
-import { createContext, useEffect} from "react"
 import NewDashboard from './pages/dashboard/newDashboard';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateTokenFromStorage } from './app/login/loginSlice';
-import { ToastContainer } from 'react-toastify';
-
-
-export const DataProvider = createContext({})
+import { Route, Routes } from 'react-router-dom';
+import CardListingPage from './pages/card_listing';
+import CardRequestPage from './pages/card_request';
+import CardRenewPage from './pages/card_renew';
+import CardReplacementPage from './pages/card_replace';
+import CardBlockPage from './pages/card_block';
+import AccessControlPage from './pages/access_control';
 
 function App() {
-  // const [appData,setAppData] = useState({
-  //   userData: {},
-  //   vendorData:[]
-  // })
-  const authState = useSelector(state=>state.authReducer)
 
-  let token = authState.token
-const dispatch = useDispatch()
-
-
-  useEffect(()=>{
-    let localToken = localStorage.getItem("token")
-    if(localToken && token.length<3){
-      dispatch(updateTokenFromStorage(localToken))
-    }
-  },[dispatch])
-
-  // const appDataModifier =(newData)=>{
-  //   console.log(newData)
-  //   setAppData(newData)
-  // } 
-
-
-  // const router = createBrowserRouter([
-  //   {
-  //     path: "/login",
-  //     element: <Login />,
-  //     // errorElement: <ErrorPage />,
-  //   },
-  //   {
-  //     path: "/",
-  //     element: <Dashboard />,
-  //     // errorElement: <ErrorPage />,
-  //   },
-  // ]);
-
-    return <div>
-      {(token?<NewDashboard /> :<Login/>)}
-      <ToastContainer />
-    </div>
-      // <Routes>
-      //   <Route path='/login' element={<Login/>}/>
-        
-      //   <Route element={<RouteAuthenticator/>}>
-      //   <Route path='/' element={<NewDashboard />} />
-      //     {/* <Route path='/' element={<Dashboard/>} /> */}
-      //   </Route>
-      // </Routes>
-
-
-}
-// const RouteAuthenticator =()=>{
-//   const location = useLocation()
   // const authState = useSelector(state=>state.authReducer)
 
   // let token = authState.token
-//   return (token?<Outlet />:<Navigate to="/login" state={{from:location}} replace/>)
-// }
+  // const dispatch = useDispatch()
+
+  return (
+    <Routes>
+      <Route path='/login' element={<Login />} />
+      <Route path='/' element={<NewDashboard />}>
+        <Route index element={<CardListingPage />} />
+        <Route path='requestCard' element={<CardRequestPage />} />
+        <Route path='renewCard' element={<CardRenewPage />} />
+        <Route path='renewCard' element={<CardReplacementPage />} />
+        <Route path='replaceCard' element={<CardReplacementPage />} />
+        <Route path='blockCard' element={<CardBlockPage />} />
+        <Route path='accessControl' element={<AccessControlPage />} />
+      </Route>
+    </Routes>
+  )
+
+
+  // useEffect(()=>{
+  //   let localToken = localStorage.getItem("token")
+  //   if(localToken && token.length<3){
+  //     dispatch(updateTokenFromStorage(localToken))
+  //   }
+  //   window.onclick = function(event) {
+  //     if (event.target.id === 'myModal') {
+  //       dispatch(updateState({
+  //         key:"isModalOpen",
+  //         value: false
+  //       }))
+  //     }
+  //   }
+  // },[dispatch])
+
+
+  // return <div>
+  //   {(token?<NewDashboard /> :<Login/>)}
+  //   <ToastContainer />
+  // </div>
+
+
+}
+
 
 export default App;

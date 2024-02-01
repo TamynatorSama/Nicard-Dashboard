@@ -26,6 +26,9 @@ const notifyError = (message) => toast.error(`${message}`, {
 export const loginThunk = createAsyncThunk('/auth/login',async(value)=>{
     try{
         const response = await appAxios.post('/auth',value.data)
+        if(response.status === 200){
+            value.navigator()
+        }
         
         return {
             data:response.data}

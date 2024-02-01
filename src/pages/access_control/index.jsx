@@ -7,8 +7,9 @@ import {
 } from "../../component/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { profileData } from "../../app/appSlice";
-import { accessLoaderState, accessUserList, getUserListingSlice } from "../../app/access_control/user_list";
+import { accessLoaderState, accessUserList, getUserListingSlice } from "../../app/access_control/userList";
 import { ThreeDots } from "react-loader-spinner";
+import { updateState } from "../../app/access_control/createNewUserSlice";
 
 const AccessControlPage = () => {
   const tableNav = useRef();
@@ -41,10 +42,10 @@ const AccessControlPage = () => {
 
   useEffect(() => {
     dispatch(getUserListingSlice({
-      bank_id: profile.institution.bank_data[0].id,
+      bank_id: profile?.institution.bank_data[0].id,
       token
     }))
-  }, [profile.institution.bank_data[0].id, token, dispatch])
+  }, [profile?.institution.bank_data[0].id, token, dispatch])
 
   return (
     <section className="display-area w-full h-full px-10 flex flex-col bg-[#f6f7fb]">
@@ -58,7 +59,10 @@ const AccessControlPage = () => {
       </div>
       <div className="flex justify-between items-center">
         <h1 className="mt-3 text-4xl font-medium">User Access</h1>
-        <button className="flex gap-2 py-2 items-center px-5 rounded-md bg-[#2baf50]">
+        <button onClick={()=>dispatch(updateState({
+          key:"isModalOpen",
+          value: true
+        }))} className="active:bg-[#329f51] flex gap-2 py-2 items-center px-5 rounded-md bg-[#2baf50]">
           <TypcnUserAdd />
           <p className="text-white text-sm font-semibold">Add User</p>
         </button>

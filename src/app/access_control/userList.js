@@ -21,7 +21,6 @@ export const getUserListingSlice = createAsyncThunk('accessControl/listing', asy
             data: response.data,
         }
     } catch (e) {
-        console.log(e)
         if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
         } else if (e.response?.data?.message) {

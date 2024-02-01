@@ -2,17 +2,18 @@ import LogoLarge from "../assets/logo_large.svg";
 import Logo from "../assets/logo.svg";
 import { useState } from "react";
 import {ToastContainer} from 'react-toastify';
-import {useNavigate} from "react-router-dom"
+import {useLocation, useNavigate} from "react-router-dom"
 import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch, useSelector } from "react-redux";
 import { loginThunk } from "../app/login/loginSlice";
-import { appDataThunk } from "../app/appSlice";
 
   
 
 
 const Login = () => {
   const navigate = useNavigate();
+  const location = useLocation()
+  const from = location.state?.from?.pathName || "/"
   const loginState = useSelector(state=>state.authReducer)
   const dispatch = useDispatch()
 
@@ -29,8 +30,7 @@ const Login = () => {
 
       dispatch(loginThunk({
         navigator:()=>{
-          dispatch(appDataThunk())
-          navigate('/')},
+          navigate(from,{replace:true})},
         data:{
         email,
           password
@@ -164,7 +164,7 @@ const Login = () => {
           </form>
         </div>
       </div>
-      {/* <ToastContainer /> */}
+      <ToastContainer />
     </main>
     
   );

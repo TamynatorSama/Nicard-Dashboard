@@ -34,12 +34,12 @@ export const appDataThunk = createAsyncThunk('user/profile', async (token,thukAp
         })
 
         // const response = await appAxios.get('cards/getBankCardRequests/:bankId')
-
+        
         return {
             data: response.data,
         }
     } catch (e) {
-        if(e.response.status == 403){
+        if(e.response.status == 403 || e.response.status == 401){
             thukApi.dispatch(updateTokenFromStorage(""))
             localStorage.removeItem("token")
             
@@ -64,14 +64,13 @@ export const listUpdateThunk = createAsyncThunk('card/updateStatus', async (valu
                 "Authorization": `Bearer ${value.token}`
             }
         })
-        console.log(response)
+        
 
         return {
             data: response.data,
             formerValue: {...value.data,status_id:value.old_status_id}
         }
     } catch (e) {
-        console.log(e)
         if (e.response?.data?.error) {
             return {
                 data: Object.values(e.response.data.error).flat()[0],
@@ -103,12 +102,12 @@ export const cardListThunk = createAsyncThunk('card/list', async (access) => {
                 "Authorization": `Bearer ${access.token}`
             }
         })
+        console.log(response.data)
 
         return {
             data: response.data,
         }
     } catch (e) {
-        console.log(e)
         if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
         } else if (e.response?.data?.message) {
@@ -125,7 +124,6 @@ const appSlice = createSlice({
     initialState: initState,
     reducers: {
         updateReqestStatus:(state,action)=>{
-            
             state.institutionCardList = state.institutionCardList.map(mapVal=>{
                 if(mapVal.id == action.payload.request_id){
                     console.log(action.payload.request_status_id)
@@ -142,10 +140,12 @@ const appSlice = createSlice({
         })
         builder.addCase(appDataThunk.fulfilled, (state, action) => {
             if (action.payload?.data?.result) {
-                
+
                 let result = action.payload?.data?.result
                 state.profileData = { ...result }
+                console.log(state.profileData)
                 return;
+
             }
             notifyError(action.payload)
             state.loading = "error"
@@ -159,7 +159,6 @@ const appSlice = createSlice({
 
         })
         builder.addCase(cardListThunk.fulfilled, (state, action) => {
-
             if (action.payload?.data?.result) {
 
                 state.loading = "success"
