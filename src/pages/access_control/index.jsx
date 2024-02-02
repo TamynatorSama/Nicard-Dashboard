@@ -57,7 +57,7 @@ const AccessControlPage = () => {
           <span className="text-[#2baf50]">Access Control</span>{" "}
         </p>
       </div>
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-5">
         <h1 className="mt-3 text-4xl font-medium">User Access</h1>
         <button onClick={()=>dispatch(updateState({
           key:"isModalOpen",
@@ -67,7 +67,10 @@ const AccessControlPage = () => {
           <p className="text-white text-sm font-semibold">Add User</p>
         </button>
       </div>
-      <div className="w-full h-full bg-white rounded-t-2xl rounded-r-2xl mt-5 py-3 flex flex-col">
+      <div className="w-full h-full bg-white rounded-t-2xl rounded-r-2xl  py-3 flex flex-col overflow-y-scroll no-bars">
+        {/* <div className="h-full flex flex-col overflow-scroll">
+          <div className="h-screen bg-red-500"></div>
+        </div> */}
         <div id="tab-grp" ref={tableNav} className="flex gap-8 select-none mx-4">
           {["All", "Admins", "Users"].map((val, index) => {
             return (
@@ -143,8 +146,8 @@ const AccessControlPage = () => {
           <div className="w-1/2"></div>
 
         </div>
-        <div className="list-grp w-full h-full">
-          {loadignState === 'loading' ? <div className="flex h-full justify-center items-center">
+        <div className="list-grp w-full h-full overflow-y-scroll no-bars">
+          {loadignState === 'loading' && listData.lenght ===0 ? <div className="flex h-full justify-center items-center">
             <ThreeDots
               visible={true}
               height="80"
@@ -155,10 +158,10 @@ const AccessControlPage = () => {
               wrapperStyle={{}}
               wrapperClass=""
             />
-          </div> : <div>
+          </div> : <div className="h-full">
             {
               listData.map(data => {
-                return <div className="thead flex mt-5 justify-between border-b-2 border-stone-100 px-4 pb-2">
+                return <div className="thead flex pt-5 justify-between border-b-2 border-stone-100 px-4 pb-2">
 
                   <div className="w-1/6">
                     <input type="checkbox" name="all" id="" className="" />
@@ -179,7 +182,7 @@ const AccessControlPage = () => {
           hour: "2-digit",
           minute: "2-digit",
         })}</h1>
-                  <h1 className="text-sm font-medium text-stone-700 w-1/2">{Object.keys(data.user_info[0].roles)[0].split(" ")[1]}</h1>
+                  <h1 className="text-sm font-medium text-stone-700 w-1/2">{Object.keys(data.user_info[0].roles)[0].split("_")[1]}</h1>
                   <div className="w-1/2"></div>
 
                 </div>

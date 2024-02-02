@@ -36,8 +36,10 @@ export const getUserListingSlice = createAsyncThunk('accessControl/listing', asy
 const userAccessListSlice = createSlice({
     name: 'userAccessList',
     initialState: initState,
-    reducers: {
-
+    reducers: { 
+        addAccessUser:(state,action)=>{
+            state.accessList.push(action.payload)
+        }
     },
     extraReducers(builder){
         builder.addCase(getUserListingSlice.pending, (state, action) => {
@@ -63,6 +65,7 @@ const userAccessListSlice = createSlice({
     }
 })
 
+export const  {addAccessUser}= userAccessListSlice.actions
 export const accessUserList = state=>state.accessList.accessList
 export const accessLoaderState= state=>state.accessList.state
 export default userAccessListSlice.reducer

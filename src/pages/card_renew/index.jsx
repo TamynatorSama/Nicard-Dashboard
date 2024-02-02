@@ -18,7 +18,7 @@ const CardRenewPage=()=>{
         </p>
       </div>
       <h1 className="mt-3 text-4xl font-medium">Renew Card</h1>
-      <RequestForm request_id={requestTypes.find(val=>val.request_type_slug.toLowerCase() === "renew").id} />
+      <RequestForm request_id={requestTypes.find(val=>val.request_type_slug.toLowerCase() === "renew").id} button_name="Renew Card" />
     </div>
   );
 }

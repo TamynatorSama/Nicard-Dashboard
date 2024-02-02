@@ -7,51 +7,51 @@ import {
   IonHome,
   MaterialSymbolsDiscoverTuneRounded,
 } from "../../component/icons";
-import { useRef} from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cardList,profileData } from "../../app/appSlice";
+import { cardList, profileData } from "../../app/appSlice";
 import PaginationController from "./components/pagination_controller";
 import { changeListPerPage } from "../../app/card_listing/pagination";
 import { updateRequestStatus, updateRequestType, updateSearch } from "../../app/card_listing/listingFilterSlice";
 
-const CardListingPage = ()=>{
+const CardListingPage = () => {
 
-    const paginatorData = useSelector(state=>state.listingPaginator)
-    const profile = useSelector(profileData)
-    const filter = useSelector(state=>state.listFilter)
-    const dispatch = useDispatch()
+  const paginatorData = useSelector(state => state.listingPaginator)
+  const profile = useSelector(profileData)
+  const filter = useSelector(state => state.listFilter)
+  const dispatch = useDispatch()
 
-    const tableNav = useRef();
-    const bankCardListing = useSelector(cardList)
+  const tableNav = useRef();
+  const bankCardListing = useSelector(cardList)
 
-    const changeReuqestType = (value) =>{
-      dispatch(updateRequestType(value))
-    }
-
-
-  const changePerPage=(value)=>{
-      dispatch(changeListPerPage(value))
+  const changeReuqestType = (value) => {
+    dispatch(updateRequestType(value))
   }
-  const updateSearchText=(ev)=>{
-    if(ev.target.name === 'search'){
+
+
+  const changePerPage = (value) => {
+    dispatch(changeListPerPage(value))
+  }
+  const updateSearchText = (ev) => {
+    if (ev.target.name === 'search') {
       dispatch(updateSearch(ev.target.value))
     }
   }
 
 
-  const updateShowableList=()=>{
-    return bankCardListing.filter(ev=>ev.id.toLowerCase().includes(filter.searchText.toLowerCase()) || ev.user_info[0].nin.includes(filter.searchText)||ev.user_info[0].first_name.toLowerCase().includes(filter.searchText.toLowerCase())||ev.user_info[0].last_name.toLowerCase().includes(filter.searchText.toLowerCase())).filter(ev=>{
-      if(filter.request_status === 10){
+  const updateShowableList = () => {
+    return bankCardListing.filter(ev => ev.id.toLowerCase().includes(filter.searchText.toLowerCase()) || ev.user_info[0].nin.includes(filter.searchText) || ev.user_info[0].first_name.toLowerCase().includes(filter.searchText.toLowerCase()) || ev.user_info[0].last_name.toLowerCase().includes(filter.searchText.toLowerCase())).filter(ev => {
+      if (filter.request_status == 10) {
         return ev
       }
-      if(ev.request_status[0].id === filter.request_status){
+      if (ev.request_status[0].id == filter.request_status) {
         return ev
       }
-    }).filter(ev=>{
-      if(filter.request_type.toLowerCase().includes("all")){
+    }).filter(ev => {
+      if (filter.request_type.toLowerCase().includes("all")) {
         return ev
       }
-      if(ev.request_type[0].request_type_slug.toLowerCase().includes(filter.request_type.toLowerCase().split(" ")[0])){
+      if (ev.request_type[0].request_type_slug.toLowerCase().includes(filter.request_type.toLowerCase().split(" ")[0])) {
         return ev
       }
     })
@@ -59,7 +59,7 @@ const CardListingPage = ()=>{
 
 
 
-  const changeTableState = (index,statusId) => {
+  const changeTableState = (index, statusId) => {
     let navItems = tableNav.current.children;
 
     let myNavElement;
@@ -77,11 +77,11 @@ const CardListingPage = ()=>{
   console.log(profile)
 
   let filteredList = updateShowableList()
-  const indexOfLastRequest = paginatorData.currentPage* paginatorData.perPage
+  const indexOfLastRequest = paginatorData.currentPage * paginatorData.perPage
   const indexOfFirstRequest = indexOfLastRequest - paginatorData.perPage
-  const paginatedList = filteredList.slice(indexOfFirstRequest,indexOfLastRequest)
+  const paginatedList = filteredList.slice(indexOfFirstRequest, indexOfLastRequest)
 
-    return <div className="display-area w-full h-full px-[3vw] flex flex-col">
+  return <div className="display-area w-full h-full px-[3vw] flex flex-col">
     <div className="bread-crumps-grp mt-4 flex items-center gap-2 ">
       <IonHome />
       <p className="text-stone-400 text-[0.73rem] mt-[0.15rem] font-semibold">
@@ -132,7 +132,7 @@ const CardListingPage = ()=>{
           ]}
         /> */}
         <CustomDropDown
-        onChange={changeReuqestType}
+          onChange={changeReuqestType}
           icon={<MaterialSymbolsDiscoverTuneRounded />}
           title={filter.request_type}
           items={[
@@ -155,12 +155,12 @@ const CardListingPage = ()=>{
         id: "10",
         request_status_slug: "All Status",
         step: 100
-      },...CardRequestStatusList].map((val,index) => {
+      }, ...CardRequestStatusList].map((val, index) => {
         return (
           <div
             key={val.id}
             className="cursor-pointer"
-            onClick={() => changeTableState(index,val.id)}
+            onClick={() => changeTableState(index, val.id)}
           >
             <div className="">
               <p className="text-[0.7rem] text-center  font-semibold">{val.request_status_slug}</p>
@@ -177,48 +177,48 @@ const CardListingPage = ()=>{
     <div className="paginationController my-2 flex justify-between">
       <div id="page-info-grp">
         <p className="text-stone-400 text-[0.8rem] font-medium">
-          showing { indexOfFirstRequest} - {indexOfLastRequest > filteredList.length?filteredList.length:indexOfLastRequest } of results
+          showing {indexOfFirstRequest} - {indexOfLastRequest > filteredList.length ? filteredList.length : indexOfLastRequest} of results
         </p>
       </div>
       <PaginationController listsPerPage={paginatorData.perPage} totalLists={filteredList.length} totalItems={filteredList.length} />
       <div id="perpage-modifier" className="flex items-center gap-4">
-      <p className="text-stone-400 text-[0.8rem] font-medium">
+        <p className="text-stone-400 text-[0.8rem] font-medium">
           Request per page
         </p>
-        <CustomDropDown title={paginatorData.perPage} items={["5","10","15"]} onChange={changePerPage}/>
+        <CustomDropDown title={paginatorData.perPage} items={["5", "10", "15"]} onChange={changePerPage} />
       </div>
     </div>
     <div className="flex gap-4 rounded-xl p-2 bg-[#f9f9f9]">
-          {/* header */}
-          <p
-          
-            className="w-11/12 text-[0.76rem] font-medium text-stone-500"
-            
-          >
-            Contact Info
-          </p>
-          <p className="text-[0.76rem] text-stone-500 w-1/2">NIN</p>
-          <p className="text-[0.76rem] text-stone-500 w-4/5">Request Date</p>
-          <p className="text-[0.76rem] text-stone-500 w-full">Request Status</p>
-          <p className="text-[0.76rem] text-stone-500 w-2/5">Request Type</p>
-          <p className="text-[0.76rem] text-stone-500 w-1/2">
-            Actions
-          </p>
+      {/* header */}
+      <p
 
-          {/* end of header */}
-        </div>
-        <div className="flex flex-col gap-6 mt-4 h-full overflow-scroll pb-5 no-bars">
-          {paginatedList.map(e=>{
-            return <CardRequestListingCard key={e.id}  listData={e}/>
-          })}
-          {/* <CardRequestListingCard  status="done"/>
+        className="w-11/12 text-[0.76rem] font-medium text-stone-500"
+
+      >
+        Contact Info
+      </p>
+      <p className="text-[0.76rem] text-stone-500 w-1/2">NIN</p>
+      <p className="text-[0.76rem] text-stone-500 w-4/5">Request Date</p>
+      <p className="text-[0.76rem] text-stone-500 w-full">Request Status</p>
+      <p className="text-[0.76rem] text-stone-500 w-2/5">Request Type</p>
+      <p className="text-[0.76rem] text-stone-500 w-1/2">
+        Actions
+      </p>
+
+      {/* end of header */}
+    </div>
+    <div className="flex flex-col gap-6 mt-4 h-full overflow-scroll pb-5 no-bars">
+      {paginatedList.map(e => {
+        return <CardRequestListingCard key={e.id} listData={e} />
+      })}
+      {/* <CardRequestListingCard  status="done"/>
           <CardRequestListingCard />
           <CardRequestListingCard />
           <CardRequestListingCard />
           <CardRequestListingCard status="approved"/>
           <CardRequestListingCard />
           <CardRequestListingCard status="ready"/> */}
-        </div>
+    </div>
 
   </div>
 }
