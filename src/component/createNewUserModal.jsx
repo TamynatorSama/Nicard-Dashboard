@@ -2,6 +2,7 @@ import { useDispatch } from "react-redux"
 import { updateState } from "../app/access_control/createNewUserSlice"
 import CustomInputField from "./customInputField"
 import { CloseBtn } from "./icons"
+import { NewDropDown } from "./customDropdown"
 
 const CreateNewUserModal=()=>{
     // const modal = useSelector(state=>state.createUser)
@@ -33,7 +34,7 @@ const CreateNewUserModal=()=>{
           className="btn-custom outline-white disabled:bg-[#2baf50c7] grid place-content-center bg-[#2baf50] text-white font-bold py-2 px-5 rounded-md mt-4"
         >
 
-            
+
          
           Create User
           </button>
