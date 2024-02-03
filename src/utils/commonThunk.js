@@ -12,7 +12,6 @@ export const createCardRequestThunk = createAsyncThunk('card/thunk',async(reques
                 "Authorization": `Bearer ${state.token}`
             }
         })
-        console.log(response.data)
         if(response.status === 201){
             thunkApi.dispatch(addCardRequest(response.data.result))
         }

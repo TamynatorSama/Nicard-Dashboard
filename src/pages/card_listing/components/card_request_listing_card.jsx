@@ -2,16 +2,17 @@ import { useDispatch, useSelector } from "react-redux";
 import CustomDropDown from "../../../component/customDropdown";
 import { CardRequestStatusList } from "../../../utils/requestStatus";
 import { listUpdateThunk, updateReqestStatus } from "../../../app/appSlice";
+import useAuth from "../../../utils/hooks/useAuth";
 
 
 const CardRequestListingCard = ({ listData }) => {
   
   let statusStyle = {};
   const dispatch = useDispatch()
-  const authState = useSelector(state=>state.authReducer)
+  const auth = useAuth()
 
 
-  let token = authState.token
+  let token = auth.token
 
   switch (listData.request_status[0].request_status_slug.split(" ")[0].toLowerCase()) {
     case "pending":
@@ -96,11 +97,19 @@ const CardRequestListingCard = ({ listData }) => {
         {listData.request_type[0].request_type_slug}
       </h1>
       <div className="w-1/2">
-      <CustomDropDown title="Actions" onChange={(value)=>onChangeAction({
+
+
+
+
+      {Object.values(auth.roles).includes(7100) || Object.values(auth.roles).includes(7000)?<CustomDropDown title="Actions" onChange={(value)=>onChangeAction({
         request_id: listData.id,
         old_status_id: listData.request_status[0].id,
         request_status_id: CardRequestStatusList.find(ev=> ev.request_status_slug.toLowerCase() === value.toLowerCase()).id
-      })} optional_id={listData.id} items={CardRequestStatusList.filter(e=>e.step > listData.request_status[0].step).map(e=>e.request_status_slug)} isAction={true}/>
+      })} optional_id={listData.id} items={["Approved","Denied"]} isAction={true}/>:<CustomDropDown title="Actions" onChange={(value)=>onChangeAction({
+        request_id: listData.id,
+        old_status_id: listData.request_status[0].id,
+        request_status_id: CardRequestStatusList.find(ev=> ev.request_status_slug.toLowerCase() === value.toLowerCase()).id
+      })} optional_id={listData.id} items={CardRequestStatusList.filter(e=>e.step > listData.request_status[0].step || (e.step === -1 && listData.request_status[0].step !== 7)).map(e=>e.request_status_slug)} isAction={true}/>}
       </div>
     </div>
   );

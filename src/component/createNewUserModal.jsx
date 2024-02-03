@@ -13,8 +13,6 @@ const CreateNewUserModal = () => {
   const dispatch = useDispatch()
 
   const updateRequestForm=(ev)=>{
-
-    console.log(ev.target.name)
     dispatch(updateFormState({target:ev.target.name,value:ev.target.value}))
 
   }

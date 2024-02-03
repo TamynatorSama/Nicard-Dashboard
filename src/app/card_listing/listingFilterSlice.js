@@ -20,10 +20,15 @@ const listingFilterSlice = createSlice(
             },
             updateRequestStatus:(state,action)=>{
                 state.request_status = action.payload
+            },
+            clearFilter:(state,action)=>{
+                state.request_status = 10
+                state.request_type = "All Requests"
+                state.searchText = ""
             }
         }
     }
 )
 
-export const {updateRequestStatus,updateRequestType,updateSearch} = listingFilterSlice.actions
+export const {updateRequestStatus,updateRequestType,updateSearch,clearFilter} = listingFilterSlice.actions
 export default listingFilterSlice.reducer

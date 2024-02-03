@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from "react-redux"
 import { updateTokenFromStorage } from "../../app/login/loginSlice"
+import { profileData } from "../../app/appSlice"
 
 
 const useAuth =()=> {
     const dispatch = useDispatch()
     const authState = useSelector(state=>state.authReducer)
+    const profile = useSelector(profileData)
     let token = authState.token
     if(token.length ===0){
         let localToken = localStorage.getItem("token")
@@ -17,12 +19,14 @@ const useAuth =()=> {
     if(token.length ===0){
         return {
             token,
-            isAuthenticated:false
+            isAuthenticated:false,
+            roles: profile?.user_payload?.roles ??{}
         }
     }else{
         return {
             token,
-            isAuthenticated:true
+            isAuthenticated:true,
+            roles: profile?.user_payload?.roles ??{}
         }
     }
 

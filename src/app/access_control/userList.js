@@ -39,6 +39,11 @@ const userAccessListSlice = createSlice({
     reducers: { 
         addAccessUser:(state,action)=>{
             state.accessList.push(action.payload)
+        },
+        clearList: (state,action)=>{
+            state.accessList = []
+            state.state = "idle"
+            state.error =""
         }
     },
     extraReducers(builder){
@@ -65,7 +70,7 @@ const userAccessListSlice = createSlice({
     }
 })
 
-export const  {addAccessUser}= userAccessListSlice.actions
+export const  {addAccessUser,clearList}= userAccessListSlice.actions
 export const accessUserList = state=>state.accessList.accessList
 export const accessLoaderState= state=>state.accessList.state
 export default userAccessListSlice.reducer

@@ -78,7 +78,6 @@ const Dashboard = () => {
     getVendorData()
   }, []);
   var buildListing = appState.appData.vendorData.map((val) => {
-    console.log(val);
     return (
       <div
         key={val.id}

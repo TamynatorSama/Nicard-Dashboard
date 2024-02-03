@@ -74,7 +74,6 @@ const CardListingPage = () => {
     dispatch(updateRequestStatus(statusId))
   };
 
-  console.log(profile)
 
   let filteredList = updateShowableList()
   const indexOfLastRequest = paginatorData.currentPage * paginatorData.perPage

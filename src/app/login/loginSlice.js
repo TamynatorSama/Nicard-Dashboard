@@ -52,6 +52,10 @@ const loginSlice = createSlice({
         updateTokenFromStorage: (state,action)=>{
             
             state.token = action.payload
+        },
+        clearToken: (state,action)=>{
+            state.token = ""
+            localStorage.clear()
         }
     },
     extraReducers(builder){
@@ -77,5 +81,5 @@ const loginSlice = createSlice({
     }
 })
 
-export const {updateTokenFromStorage} = loginSlice.actions
+export const {updateTokenFromStorage,clearToken} = loginSlice.actions
 export default loginSlice.reducer

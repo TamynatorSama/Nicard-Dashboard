@@ -33,13 +33,6 @@ export const createNewUserThunk = createAsyncThunk('accessControl/create', async
                 "Authorization": `Bearer ${state.token}`
             }
         })
-        console.log(userProfile)
-        console.log({
-            ...response.data.result,
-            bank_data: [
-                // userProfile.institution.bank_data[0]                
-            ]
-        })
 
         if (response.status === 201) {
             thunkApi.dispatch(addAccessUser({
@@ -54,7 +47,6 @@ export const createNewUserThunk = createAsyncThunk('accessControl/create', async
             data: response.data
         }
     } catch (e) {
-        console.log(e)
         if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
         } else if (e.response?.data?.message) {
@@ -71,8 +63,6 @@ export const getBankBranchThunk = createAsyncThunk("accessControl/bank/branch", 
 
         const response = await appAxios.get(`/banks/getBranches/${payload.bank_id}`, {
         })
-
-        console.log(response)
 
         return {
             data: response.data
@@ -156,7 +146,6 @@ const createNewUserSlice = createSlice({
 
         })
         builder.addCase(createNewUserThunk.rejected, (state, action) => {
-            console.log(action.error)
             state.isLoading = false
             notifyError(action.error.message)
 

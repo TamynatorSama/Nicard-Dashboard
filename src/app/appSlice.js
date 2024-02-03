@@ -102,8 +102,6 @@ export const cardListThunk = createAsyncThunk('card/list', async (access) => {
                 "Authorization": `Bearer ${access.token}`
             }
         })
-        console.log(response.data)
-
         return {
             data: response.data,
         }
@@ -126,8 +124,6 @@ const appSlice = createSlice({
         updateReqestStatus:(state,action)=>{
             state.institutionCardList = state.institutionCardList.map(mapVal=>{
                 if(mapVal.id == action.payload.request_id){
-                    console.log(action.payload.request_status_id)
-                    console.log(CardRequestStatusList.find(ev=>ev.id === action.payload.request_status_id))
                     return {...mapVal,request_status: [CardRequestStatusList.find(ev=>ev.id === action.payload.request_status_id)]}
                 }
                 return mapVal
@@ -135,6 +131,12 @@ const appSlice = createSlice({
         },
         addCardRequest:(state,action)=>{
             state.institutionCardList.push(action.payload)
+        },
+        clearData:(state,action)=>{
+            state.error = null
+            state.institutionCardList = []
+            state.profileData = {}
+            state.loading= "idle"
         }
     },
     extraReducers(builder) {
@@ -146,7 +148,6 @@ const appSlice = createSlice({
 
                 let result = action.payload?.data?.result
                 state.profileData = { ...result }
-                console.log(state.profileData)
                 return;
 
             }
@@ -181,14 +182,11 @@ const appSlice = createSlice({
 
         })
         builder.addCase(listUpdateThunk.fulfilled, (state, action) => {
-            console.log(action.payload)
 
             if (action.payload?.data?.statusCode !== 200) {
                 let oldValue = action.payload.formerValue
                 state.institutionCardList = state.institutionCardList.map(mapVal=>{
                     if(mapVal.id == oldValue.request_id){
-                        console.log(oldValue.status_id)
-                        console.log(CardRequestStatusList.find(ev=>ev.id == oldValue.status_id))
                         return {...mapVal,request_status: [CardRequestStatusList.find(ev=>ev.id === oldValue.status_id)]}
                     }
                     return mapVal
@@ -207,7 +205,7 @@ const appSlice = createSlice({
     }
 })
 
-export const {updateReqestStatus,addCardRequest} = appSlice.actions
+export const {updateReqestStatus,addCardRequest,clearData} = appSlice.actions
 
 export const appLoadingState = (state) => state.app.loading
 export const profileData = (state) => state.app.profileData

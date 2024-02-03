@@ -26,13 +26,11 @@ export const validateNinThunk = createAsyncThunk('request/validate',async(resour
                 "Authorization": `Bearer ${state.token}`
             }
         })
-        console.log(response)
 
         return {
             data: response.data,
         }
     } catch (e) {
-        console.log(e)
         if (e.response?.data?.error) {
             return Object.values(e.response.data.error).flat()[0]
         } else if (e.response?.data?.message) {
@@ -90,7 +88,7 @@ const cardRequestFormSlice = createSlice({
         })
         builder.addCase(validateNinThunk.rejected, (state, action) => {
             state.isLoadingValidation = false
-            notifyError(action.error)
+            notifyError(action.error.message)
 
         })
 
