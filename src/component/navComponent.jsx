@@ -1,17 +1,18 @@
 
-import greenLogo from "../assets/green_logo.svg";
 import dashboardIcon from "../assets/dashboard.svg";
 import NewLogo from '../assets/newLogo.jpg'
 import { FaSolidUsers, Logout, MaterialSymbolsAddCardOutlineRounded, MaterialSymbolsCreditCardGearOutline, MdiCreditCardRemoveOutline, MdiCreditCardSyncOutline } from "./icons";
 import { useDispatch, useSelector } from "react-redux";
 import { changePage } from "../app/navigator/navigatorSlice";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { resetFields } from "../app/card_request/requestFormSlice";
 import useAuth from "../utils/hooks/useAuth";
 import { clearData } from "../app/appSlice";
 import { clearFilter } from "../app/card_listing/listingFilterSlice";
 import { clearToken } from "../app/login/loginSlice";
 import { resetForm } from "../app/access_control/createNewUserSlice";
+import { clearList } from "../app/access_control/userList";
+import { useEffect } from "react";
 const NavComponent = () => {
   const currentNavIndex = useSelector((state)=>state.navigator.selectedPage)
   const dispatch = useDispatch()
@@ -22,6 +23,34 @@ const NavComponent = () => {
     dispatch(resetFields())
     dispatch(changePage(newIndex))
   };
+  let okay = "asdas"
+
+  const location = useLocation()
+  useEffect(()=>{
+    const pathName = location.pathname
+    switch (pathName.toLowerCase()){
+      case '/': 
+      dispatch(changePage(0))
+      break
+      case '/requestcard':
+        dispatch(changePage(1))
+        break
+        case '/renewcard':
+        dispatch(changePage(2))
+        break
+        case '/replacecard':
+        dispatch(changePage(3))
+        break
+        case '/blockcard':
+        dispatch(changePage(4))
+        break
+        default:
+          dispatch(changePage(5))
+          break
+    }
+  },[location])
+
+
 
   return (
     <div className="w-fit lg:w-1/4 h-full bg-[#001a07] flex flex-col px-4 lg:px-[clamp(1em,2vw,2.5em)] py-10 ">
@@ -61,6 +90,7 @@ const NavComponent = () => {
         dispatch(clearFilter())
         dispatch(clearToken())
         dispatch(resetForm())
+        dispatch(clearList())
       }}>
       <h2 className="hidden lg:block text-red-700 font-medium">Logout</h2>
       <Logout />

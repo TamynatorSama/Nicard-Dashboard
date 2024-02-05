@@ -80,9 +80,6 @@ const CardListingPage = () => {
   const indexOfLastRequest = paginatorData.currentPage * paginatorData.perPage
   const indexOfFirstRequest = indexOfLastRequest - paginatorData.perPage
   const paginatedList = filteredList.slice(indexOfFirstRequest, indexOfLastRequest)
-
-  console.log(new Array().first(profile.institution?.bank_data??[]))
-  console.log("new Array().first(profile.institution?.bank_data??[])")
   return <div className="display-area w-full h-full px-[3vw] flex flex-col">
     <div className="bread-crumps-grp mt-4 flex items-center gap-2 ">
       <IonHome />
