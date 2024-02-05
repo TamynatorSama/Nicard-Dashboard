@@ -28,7 +28,7 @@ export const createNewUserThunk = createAsyncThunk('accessControl/create', async
 
     try {
 
-        const response = await appAxios.post(`/user/createBankUser`, data, {
+        const response = await appAxios.post(`/user/${data.url}`, data.data, {
             headers: {
                 "Authorization": `Bearer ${state.token}`
             }
@@ -58,12 +58,11 @@ export const createNewUserThunk = createAsyncThunk('accessControl/create', async
     }
 })
 
-export const getBankBranchThunk = createAsyncThunk("accessControl/bank/branch", async (payload, thunkApi) => {
+export const getBankBranchThunk = createAsyncThunk("accessControl/bank/branch", async (payload) => {
+    console.log(payload)
     try {
-
-        const response = await appAxios.get(`/banks/getBranches/${payload.bank_id}`, {
+        const response = await appAxios.get(`/${payload.url}/${payload.institution_id}`, {
         })
-
         return {
             data: response.data
         }
@@ -111,9 +110,9 @@ const createNewUserSlice = createSlice({
         builder.addCase(getBankBranchThunk.fulfilled, (state, action) => {
             state.isLoadingBankBranches = false
             if (action.payload?.data?.result) {
-                let result = action.payload?.data?.result.banks
+                let result = action.payload?.data?.result.institution_branches
                 state.branch_list = [...result]
-                state.requestForm.branch = result[0].branch_code
+                state.requestForm.branch = result[0].branch_code ?? result[0].id
                 return;
             }
             notifyError(action.payload)

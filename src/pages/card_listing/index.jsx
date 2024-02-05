@@ -13,6 +13,7 @@ import { cardList, profileData } from "../../app/appSlice";
 import PaginationController from "./components/pagination_controller";
 import { changeListPerPage } from "../../app/card_listing/pagination";
 import { updateRequestStatus, updateRequestType, updateSearch } from "../../app/card_listing/listingFilterSlice";
+import emptyPng from "../../assets/Empty-cuate.svg";
 
 const CardListingPage = () => {
 
@@ -80,6 +81,8 @@ const CardListingPage = () => {
   const indexOfFirstRequest = indexOfLastRequest - paginatorData.perPage
   const paginatedList = filteredList.slice(indexOfFirstRequest, indexOfLastRequest)
 
+  console.log(new Array().first(profile.institution?.bank_data??[]))
+  console.log("new Array().first(profile.institution?.bank_data??[])")
   return <div className="display-area w-full h-full px-[3vw] flex flex-col">
     <div className="bread-crumps-grp mt-4 flex items-center gap-2 ">
       <IonHome />
@@ -90,7 +93,7 @@ const CardListingPage = () => {
       </p>
     </div>
     <div className="title-grp">
-      <h1 className="mt-3 text-4xl font-medium">{profile.institution?.bank_data[0].bank_name}</h1>
+      <h1 className="mt-3 text-4xl font-medium">{new Array().first(profile.institution?.bank_data??[])?.bank_name ?? new Array().first(profile.institution?.institution_data??[])?.institution_name}</h1>
       <p className="text-stone-400 text-[0.9rem] font-semibold">
         Card Request Listing
       </p>
@@ -207,16 +210,19 @@ const CardListingPage = () => {
       {/* end of header */}
     </div>
     <div className="flex flex-col gap-6 mt-4 h-full overflow-scroll pb-5 no-bars">
-      {paginatedList.map(e => {
+      {bankCardListing.length ===0?<div className="h-[90%] flex items-center justify-center flex-col">
+            <img
+              src={emptyPng}
+              alt=""
+              className=" w-[25em] h-[80%] opacity-90"
+            />
+            <h1 className="text-xl font-semibold text-center text-stone-700 max-w-[15em]">
+              No Card Request has been made to this account
+            </h1>
+          </div>: paginatedList.map(e => {
         return <CardRequestListingCard key={e.id} listData={e} />
       })}
-      {/* <CardRequestListingCard  status="done"/>
-          <CardRequestListingCard />
-          <CardRequestListingCard />
-          <CardRequestListingCard />
-          <CardRequestListingCard status="approved"/>
-          <CardRequestListingCard />
-          <CardRequestListingCard status="ready"/> */}
+
     </div>
 
   </div>

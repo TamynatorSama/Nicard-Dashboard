@@ -32,9 +32,8 @@ export const appDataThunk = createAsyncThunk('user/profile', async (token,thukAp
                 "Authorization": `Bearer ${token}`
             }
         })
-
         // const response = await appAxios.get('cards/getBankCardRequests/:bankId')
-        
+        console.log(response)
         return {
             data: response.data,
         }
@@ -163,6 +162,7 @@ const appSlice = createSlice({
 
         })
         builder.addCase(cardListThunk.fulfilled, (state, action) => {
+            console.log("user profile fillfilled")
             if (action.payload?.data?.result) {
 
                 state.loading = "success"

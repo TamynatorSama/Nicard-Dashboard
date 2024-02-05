@@ -7,13 +7,14 @@ const initState = {
     error: ""
 }
 
-export const getUserListingSlice = createAsyncThunk('accessControl/listing', async (resource) => {
-    // let url = 
+export const getUserListingSlice = createAsyncThunk('accessControl/listing', async (resource,thunkApi) => {
+    let state = thunkApi.getState().authReducer
+    console.log(resource.url)
     try {
 
-        const response = await appAxios.get(`/user/getUserBanks/${resource.bank_id}`, {
+        const response = await appAxios.get(`/user/${resource.url}/${resource.param}`, {
             headers: {
-                "Authorization": `Bearer ${resource.token}`
+                "Authorization": `Bearer ${state.token}`
             }
         })
 

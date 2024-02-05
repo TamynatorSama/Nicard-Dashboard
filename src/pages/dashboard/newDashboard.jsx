@@ -9,6 +9,7 @@ import CreateNewUserModal from "../../component/createNewUserModal";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../../utils/hooks/useAuth";
 import { ToastContainer } from "react-toastify";
+import '../../utils/extensions'
 
 const NewDashboard = () => {
   const modalState = useSelector(createUserModalState)
@@ -34,8 +35,14 @@ const NewDashboard = () => {
     const fetchCardRequests = async(bank_id)=>{
       dispatch(cardListThunk({token,bank_id}))
     }
-    if(profile?.institution?.bank_data){
-      fetchCardRequests(profile.institution.bank_data[0].id)
+    if(profile?.institution?.bank_data || profile?.institution?.institution_data){
+      console.log(profile.institution?.bank_data)
+      // if(profile.institution?.bank_data){
+        fetchCardRequests(new Array().first(profile.institution?.bank_data??[])?.id ?? new Array().first(profile.institution?.institution_data??[])?.id)
+      // }
+      // else{
+      //   fetchCardRequests(?.id)
+      // }
     }
   },[token,profile,dispatch])
 

@@ -31,6 +31,7 @@ const RequestForm=({request_id,button_name = "Request Card"})=>{
 
   const submitForm=(ev)=>{
     ev.preventDefault()
+    console.log(profile.institution)
     dispatch(createCardRequestThunk({
       request_type_id: request_id,
       first_name: formState.first_name,
@@ -39,8 +40,8 @@ const RequestForm=({request_id,button_name = "Request Card"})=>{
       date_of_birth: formState.date_of_birth,
       nin: formState.nin,
       phone_number: formState.phone_number,
-      bank_id: profile.institution.bank_data[0].id,
-      branch_id: profile.institution.branch_code,
+      bank_id: [].first(profile.institution?.bank_data??[])?.id ??profile.institution?.institution_data[0]?.id ,
+      branch_id: profile.institution?.branch_code ?? profile.institution?.branch_id,
       card_type: formState.card_type
     }))
   }

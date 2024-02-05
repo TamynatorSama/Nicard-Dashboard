@@ -10,6 +10,7 @@ import { profileData } from "../../app/appSlice";
 import { accessLoaderState, accessUserList, getUserListingSlice } from "../../app/access_control/userList";
 import { ThreeDots } from "react-loader-spinner";
 import { updateState } from "../../app/access_control/createNewUserSlice";
+import useAuth from "../../utils/hooks/useAuth";
 
 const AccessControlPage = () => {
   const tableNav = useRef();
@@ -17,8 +18,7 @@ const AccessControlPage = () => {
 
   const profile = useSelector(profileData)
   const dispatch = useDispatch()
-  const authState = useSelector(state => state.authReducer)
-  let token = authState.token
+  const authState = useAuth()
   const listData = useSelector(accessUserList)
   const loadignState = useSelector(accessLoaderState)
   // const setDropdownState=(ev)=>{
@@ -38,14 +38,16 @@ const AccessControlPage = () => {
     }
     navItems.item(index).appendChild(myNavElement);
   };
-  console.log(listData)
 
   useEffect(() => {
-    dispatch(getUserListingSlice({
-      bank_id: profile?.institution?.bank_data[0].id,
-      token
-    }))
-  }, [profile?.institution?.bank_data, token, dispatch])
+    const payload = Object.values(authState.roles).includes(7100 || 7000) ?{
+      url: 'getNimcUsers',
+      param: new Array().first(profile.institution?.institution_data??[])?.id
+    } :{param: new Array().first(profile.institution?.bank_data??[])?.id ?? "",url:"getBankUsers"
+  }
+    dispatch(getUserListingSlice(payload
+      ))
+  }, [profile?.institution, dispatch])
 
   return (
     <section className="display-area w-full h-full px-10 flex flex-col bg-[#f6f7fb]">
@@ -147,7 +149,7 @@ const AccessControlPage = () => {
 
         </div>
         <div className="list-grp w-full h-full overflow-y-scroll no-bars">
-          {loadignState === 'loading' && listData.lenght ===0 ? <div className="flex h-full justify-center items-center">
+          {loadignState === 'loading' && listData.length ===0 ? <div className="flex h-full justify-center items-center">
             <ThreeDots
               visible={true}
               height="80"
@@ -161,7 +163,7 @@ const AccessControlPage = () => {
           </div> : <div className="h-full">
             {
               listData.map(data => {
-                return <div className="thead flex pt-5 justify-between border-b-2 border-stone-100 px-4 pb-2">
+                return <div key={data.user_info[0].email} className="thead flex pt-5 justify-between border-b-2 border-stone-100 px-4 pb-2">
 
                   <div className="w-1/6">
                     <input type="checkbox" name="all" id="" className="" />

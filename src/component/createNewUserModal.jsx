@@ -4,11 +4,13 @@ import CustomInputField from "./customInputField"
 import { CloseBtn, FaSolidLoader } from "./icons"
 import { useEffect } from "react"
 import { profileData } from "../app/appSlice"
+import useAuth from "../utils/hooks/useAuth"
 
 const CreateNewUserModal = () => {
   const form = useSelector(requestForm)
   const createState = useSelector(state=>state.createNewUser)
   const profile = useSelector(profileData)
+  const authState = useAuth()
   
   const dispatch = useDispatch()
 
@@ -19,24 +21,46 @@ const CreateNewUserModal = () => {
 
   const submitCreationForm=(ev)=>{
     ev.preventDefault()
-    dispatch(createNewUserThunk({
-      bank_id: profile?.institution?.bank_data[0].id,
-      assigned_roles: form.roles == 5100 ? {"Bank_Admin": 5100}:{"Bank_User": 5000},
-      first_name:form.first_name,
-      last_name: form.last_name,
-      phone_number: form.phone_number,
-      email: form.email,
-      password: form.password,
-      branch_code: form.branch
-    }))
+    if(Object.values(authState.roles).includes(7100 || 7000)){
+      dispatch(createNewUserThunk({
+        url: 'createNimcUser',
+        data:{
+        bank_id: profile?.institution?.institution_data[0].id,
+        assigned_roles: form.roles == 7100 ? {"Bank_Admin": 7100}:{"Bank_User": 7000},
+        first_name:form.first_name,
+        last_name: form.last_name,
+        phone_number: form.phone_number,
+        email: form.email,
+        password: form.password,
+        branch_id: form.branch
+      }}))
+    }else{
+      dispatch(createNewUserThunk({
+        url: 'createBankUser',
+        data:{
+        bank_id: profile?.institution?.bank_data[0].id,
+        assigned_roles: form.roles == 5100 ? {"Bank_Admin": 5100}:{"Bank_User": 5000},
+        first_name:form.first_name,
+        last_name: form.last_name,
+        phone_number: form.phone_number,
+        email: form.email,
+        password: form.password,
+        branch_code: form.branch
+      }}))
+    }
   }
 
   useEffect(()=>{
     
     if(createState.branch_list.length === 0){
-      dispatch(getBankBranchThunk({
-        bank_id: profile?.institution?.bank_data[0].id
-      }))
+      const payload = Object.values(authState.roles).includes(7100 || 7000) ? {
+        url: "systemUtils/nimcBranch",
+        institution_id:profile?.institution.institution_data[0].id
+      }:{
+        url: "banks/getBranches",
+        institution_id: profile?.institution?.bank_data[0].id
+      }
+      dispatch(getBankBranchThunk(payload))
     }
   },[])
 
@@ -72,10 +96,10 @@ const CreateNewUserModal = () => {
           <option value={5000}>User</option>
         </select>
         <select name="branch" onChange={updateRequestForm} value={form.branch} className="text-sm font-medium text-stone-700">
-          {createState.isLoadingBankBranches && createState.branch_list.length ===0 ? <option>Loading <FaSolidLoader /></option>:createState.branch_list.map(list=><option key={list.id} value={list.branch_code} >{list.branch_name}</option>)}
-          {/* <option value={{"Select Branch":100}}>{--- Select Branch ---}</option>
-          <option value={{"Bank_Admin": 5100}}>Admin</option>
-          <option value={{"Bank_User": 5000}}>User</option> */}
+          {
+          createState.isLoadingBankBranches && createState.branch_list.length ===0 ? <option>Loading <FaSolidLoader /></option>
+          :
+          createState.branch_list.map(list=><option key={list.id} value={list.branch_code??list.id} >{list.branch_name}</option>)}
         </select>
       </div>
 

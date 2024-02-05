@@ -1,7 +1,7 @@
 
 import greenLogo from "../assets/green_logo.svg";
 import dashboardIcon from "../assets/dashboard.svg";
-
+import NewLogo from '../assets/newLogo.jpg'
 import { FaSolidUsers, Logout, MaterialSymbolsAddCardOutlineRounded, MaterialSymbolsCreditCardGearOutline, MdiCreditCardRemoveOutline, MdiCreditCardSyncOutline } from "./icons";
 import { useDispatch, useSelector } from "react-redux";
 import { changePage } from "../app/navigator/navigatorSlice";
@@ -26,8 +26,8 @@ const NavComponent = () => {
   return (
     <div className="w-fit lg:w-1/4 h-full bg-[#001a07] flex flex-col px-4 lg:px-[clamp(1em,2vw,2.5em)] py-10 ">
       <div className="flex items-center gap-4 justify-start">
-        <img src={greenLogo} alt="Nicard Logo" className="w-[3em]" />
-        <h1 className="hidden lg:block text-[#208a3d] text-xl font-semibold">Nicard</h1>
+        <img src={NewLogo} alt="Nicard Logo" className="w-[2em]" />
+        <h1 className="hidden lg:block text-[#208a3d] text-xl font-semibold">eIDCard</h1>
       </div>
       <div className="mt-10  flex flex-col gap-3">
         <Link to="/"  onClick={()=> changeSelected(0)} className={`flex items-center gap-2 ${currentNavIndex===0?"bg-[#2baf50] opacity-100":"opacity-70"} w-fit lg:w-full py-2 px-3 lg:px-[10%] rounded-md cursor-pointer`}>
