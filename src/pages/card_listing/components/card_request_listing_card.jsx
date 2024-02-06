@@ -66,16 +66,15 @@ const CardRequestListingCard = ({ listData }) => {
 
   return (
     <div
-       onClick={()=>{
+      className="rounded-xl transition-all relative z-20 duration-200 flex items-center gap-4  p-2 cursor-pointer">
+      <div className="w-11/12" onClick={()=>{
         dispatch(updateModalInfo({
           ...listData.user_info[0],
           request_type: listData.request_type[0].request_type_slug,
           request_status: listData.request_status[0].request_status_slug,
           ref_id: listData.id
         }))
-        dispatch(updateListModalState(true))}} 
-      className="rounded-xl transition-all duration-200 flex items-center gap-4  p-2 cursor-pointer">
-      <div className="w-11/12">
+        dispatch(updateListModalState(true))}} >
         <h1 className="text-[0.8rem] font-medium w-full text-stone-800 te">
           {listData.user_info[0].first_name + " " + listData.user_info[0].last_name}
         </h1>
