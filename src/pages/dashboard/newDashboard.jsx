@@ -10,9 +10,11 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import useAuth from "../../utils/hooks/useAuth";
 import { ToastContainer } from "react-toastify";
 import '../../utils/extensions'
+import ViewInfoModal from "../card_listing/components/view_info_modal";
 
 const NewDashboard = () => {
   const modalState = useSelector(createUserModalState)
+  const listingModal = useSelector(state=>state.listFilter.showModal)
   const { isAuthenticated,token } = useAuth()
   const profile = useSelector(profileData)
 
@@ -22,8 +24,7 @@ const NewDashboard = () => {
 
 
   const dispatch = useDispatch()
-
-
+  
   useEffect(()=>{
     const execute = async()=>{
       dispatch(appDataThunk(token))
@@ -38,7 +39,7 @@ const NewDashboard = () => {
     if(profile?.institution?.bank_data || profile?.institution?.institution_data){
       console.log(profile.institution?.bank_data)
       // if(profile.institution?.bank_data){
-        fetchCardRequests(new Array().first(profile.institution?.bank_data??[])?.id ?? new Array().first(profile.institution?.institution_data??[])?.id)
+        fetchCardRequests([].first(profile.institution?.bank_data??[])?.id ?? [].first(profile.institution?.institution_data??[])?.id)
       // }
       // else{
       //   fetchCardRequests(?.id)
@@ -70,6 +71,7 @@ const NewDashboard = () => {
     return (
       <main className="w-full h-svh flex relative">
         {modalState ? <CreateNewUserModal />:<></>}
+        {listingModal ? <ViewInfoModal />:<></>}
         <NavComponent />
         <Outlet />
         <ToastContainer />

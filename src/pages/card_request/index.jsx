@@ -14,7 +14,7 @@ const CardRequestPage = () => {
           <span className="text-[#2baf50]">Card Request</span>{" "}
         </p>
       </div>
-      <h1 className="mt-3 text-4xl font-medium">Request Card</h1>
+      <h1 className="mt-3 text-4xl font-medium">Card Request</h1>
       <RequestForm request_id={requestTypes.find(val=>val.request_type_slug.toLowerCase() === "request").id} />
     </div>
   );

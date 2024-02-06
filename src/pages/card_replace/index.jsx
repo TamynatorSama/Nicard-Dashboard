@@ -17,7 +17,7 @@ const CardReplacementPage=()=>{
         <span className="text-[#2baf50]">Card Replacement</span>{" "}
       </p>
     </div>
-    <h1 className="mt-3 text-4xl font-medium">Replace Card</h1>
+    <h1 className="mt-3 text-4xl font-medium">Card Replacement</h1>
     <RequestForm request_id={requestTypes.find(val=>val.request_type_slug.toLowerCase() === "replace").id} button_name="Replace Card" />
   </div>
 }

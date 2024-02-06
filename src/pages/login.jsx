@@ -1,6 +1,5 @@
 import LogoLarge from "../assets/logo_large.svg";
-import Logo from "../assets/logo.svg";
-import NewLogo from '../assets/newLogo.jpg'
+import NewLogo from '../assets/newLogo.png'
 import { useState } from "react";
 import {ToastContainer} from 'react-toastify';
 import {useLocation, useNavigate} from "react-router-dom"
@@ -96,7 +95,7 @@ const Login = () => {
         <img src={LogoLarge} className="h-full" alt="" />
       </div>
       <div className="flex justify-center items-center flex-col z-10">
-        <img src={NewLogo} className="h-full max-w-[3em]" alt="Nicard logo" />
+        <img src={NewLogo} className="h-fit max-w-[5em] mb-3 object-cover" alt="eIDCard logo" />
         <h1 className="mb-5 text-3xl font-bold">eIDCard</h1>
         <div className="login-box w-full max-w-[25em] p-10 border-2 border-stone-200 rounded-2xl shadow-md bg-white">
           <h1 className="font-bold text-4xl ">Login</h1>

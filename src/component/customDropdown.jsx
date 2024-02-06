@@ -3,7 +3,7 @@ import "../App.css";
 import { EpArrowDownBold } from "./icons";
 import React, { useState } from 'react';
 
-const CustomDropDown = ({icon,title,items=[],onChange,optional_id,isAction = false}) => {
+const CustomDropDown = ({icon,title,items=[],onChange,optional_id,isAction = false,disabled=false}) => {
   
   const dateRef = useRef()
 
@@ -22,8 +22,8 @@ const CustomDropDown = ({icon,title,items=[],onChange,optional_id,isAction = fal
   
 
   return (
-    <label tabIndex="1" onClick={showDatePicker}  for={optional_id??title} className="drop group py-[0.2rem] px-3 border[#e3e3e3] border-2 rounded-lg flex items-center justify-between gap-3 relative select-none">
-       {<input id={optional_id??title} type="checkbox" className="hidden" name="dropdown"/>}
+    <label tabIndex="1" onClick={showDatePicker}  for={optional_id??title} className="drop group py-[0.2rem] z-30 px-3 border[#e3e3e3] border-2 rounded-lg flex items-center justify-between gap-3 relative select-none bg-white">
+       {<input id={optional_id??title} disabled={disabled} type="checkbox" className="hidden" name="dropdown"/>}
       {icon}
       <p className="font-semibold text-[0.9rem] mt-[0.15rem] text-[#666666] mr-2">{title}</p>
       <div className="arrow">

@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit"
 const initState = {
     currentPage:1,
     perPage: 10,
+
 }
 
 const cardListingPaginationSlice = createSlice({

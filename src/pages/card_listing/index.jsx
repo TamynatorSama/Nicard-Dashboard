@@ -2,18 +2,20 @@
 import CardRequestListingCard from "./components/card_request_listing_card";
 import CustomDropDown from "../../component/customDropdown";
 import { CardRequestStatusList } from "../../utils/requestStatus";
+import NimcLogo from '../../assets/nimcLogo.png'
 import {
   IconamoonSearch,
   IonHome,
   MaterialSymbolsDiscoverTuneRounded,
 } from "../../component/icons";
-import { useRef } from "react";
+import { useEffect, useLayoutEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { cardList, profileData } from "../../app/appSlice";
 import PaginationController from "./components/pagination_controller";
 import { changeListPerPage } from "../../app/card_listing/pagination";
 import { updateRequestStatus, updateRequestType, updateSearch } from "../../app/card_listing/listingFilterSlice";
 import emptyPng from "../../assets/Empty-cuate.svg";
+import ViewInfoModal from "./components/view_info_modal";
 
 const CardListingPage = () => {
 
@@ -25,7 +27,7 @@ const CardListingPage = () => {
   const tableNav = useRef();
   const bankCardListing = useSelector(cardList)
 
-  const changeReuqestType = (value) => {
+  const changeRequestType = (value) => {
     dispatch(updateRequestType(value))
   }
 
@@ -57,6 +59,15 @@ const CardListingPage = () => {
       }
     })
   }
+  useLayoutEffect(() => {
+    if (tableNav.current) {
+      changeTableState([{
+        id: "10",
+        request_status_slug: "All Status",
+        step: 100
+      }, ...CardRequestStatusList].findIndex(val => val.id == filter.request_status), filter.request_status)
+    }
+  }, [])
 
 
 
@@ -76,11 +87,12 @@ const CardListingPage = () => {
   };
 
 
+
   let filteredList = updateShowableList()
   const indexOfLastRequest = paginatorData.currentPage * paginatorData.perPage
   const indexOfFirstRequest = indexOfLastRequest - paginatorData.perPage
   const paginatedList = filteredList.slice(indexOfFirstRequest, indexOfLastRequest)
-  return <div className="display-area w-full h-full px-[3vw] flex flex-col">
+  return <div className="display-area w-full h-full px-[3vw] flex flex-col relative">
     <div className="bread-crumps-grp mt-4 flex items-center gap-2 ">
       <IonHome />
       <p className="text-stone-400 text-[0.73rem] mt-[0.15rem] font-semibold">
@@ -90,8 +102,12 @@ const CardListingPage = () => {
       </p>
     </div>
     <div className="title-grp">
-      <h1 className="mt-3 text-4xl font-medium">{new Array().first(profile.institution?.bank_data??[])?.bank_name ?? new Array().first(profile.institution?.institution_data??[])?.institution_name}</h1>
-      <p className="text-stone-400 text-[0.9rem] font-semibold">
+      <div className="flex items-center gap-2 flex-row-reverse justify-end">
+        {(profile.institution?.bank_data ?? [])?.bank_name ? <></>:<img src={NimcLogo} className="w-14 h-fit object-cover mb-7 mt-3" />}
+        <h1 className="mt-3 text-4xl font-medium">{new Array().first(profile.institution?.bank_data ?? [])?.bank_name ?? new Array().first(profile.institution?.institution_data ?? [])?.institution_name}</h1>
+
+      </div>   
+         <p className="text-stone-400 text-[0.9rem] font-semibold">
         Card Request Listing
       </p>
     </div>
@@ -131,7 +147,7 @@ const CardListingPage = () => {
           ]}
         /> */}
         <CustomDropDown
-          onChange={changeReuqestType}
+          onChange={changeRequestType}
           icon={<MaterialSymbolsDiscoverTuneRounded />}
           title={filter.request_type}
           items={[
@@ -196,9 +212,9 @@ const CardListingPage = () => {
       >
         Contact Info
       </p>
-      <p className="text-[0.76rem] text-stone-500 w-1/2">NIN</p>
+      <p className="text-[0.76rem] text-stone-500 w-full">Reference</p>
       <p className="text-[0.76rem] text-stone-500 w-4/5">Request Date</p>
-      <p className="text-[0.76rem] text-stone-500 w-full">Request Status</p>
+      <p className="text-[0.76rem] text-stone-500 w-10/12">Request Status</p>
       <p className="text-[0.76rem] text-stone-500 w-2/5">Request Type</p>
       <p className="text-[0.76rem] text-stone-500 w-1/2">
         Actions
@@ -207,16 +223,16 @@ const CardListingPage = () => {
       {/* end of header */}
     </div>
     <div className="flex flex-col gap-6 mt-4 h-full overflow-scroll pb-5 no-bars">
-      {bankCardListing.length ===0?<div className="h-[90%] flex items-center justify-center flex-col">
-            <img
-              src={emptyPng}
-              alt=""
-              className=" w-[25em] h-[80%] opacity-90"
-            />
-            <h1 className="text-xl font-semibold text-center text-stone-700 max-w-[15em]">
-              No Card Request has been made to this account
-            </h1>
-          </div>: paginatedList.map(e => {
+      {bankCardListing.length === 0 ? <div className="h-[90%] flex items-center justify-center flex-col">
+        <img
+          src={emptyPng}
+          alt=""
+          className=" w-[25em] h-[80%] opacity-90"
+        />
+        <h1 className="text-xl font-semibold text-center text-stone-700 max-w-[15em]">
+          No Card Request has been made to this account
+        </h1>
+      </div> : paginatedList.map(e => {
         return <CardRequestListingCard key={e.id} listData={e} />
       })}
 

@@ -27,7 +27,13 @@ export const loginThunk = createAsyncThunk('/auth/login',async(value)=>{
     try{
         const response = await appAxios.post('/auth',value.data)
         if(response.status === 200){
-            value.navigator()
+            if(!Object.values(response.data.result.user_payload.roles).includes(1001)){
+                value.navigator()
+            }else{
+                notifyError("Unauthorized Login")
+            }
+            
+            
         }
         
         return {

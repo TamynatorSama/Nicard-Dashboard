@@ -11,6 +11,7 @@ import AccessControlPage from './pages/access_control';
 import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { resetForm, updateState } from './app/access_control/createNewUserSlice';
+import { updateListModalState } from './app/card_listing/listingFilterSlice';
 
 function App() {
   const dispatch = useDispatch()
@@ -23,6 +24,7 @@ function App() {
     window.onclick = function(event) {
       if (event.target.id === 'myModal') {
         dispatch(resetForm())
+        dispatch(updateListModalState(false))
         dispatch(updateState({
           key:"isModalOpen",
           value: false
